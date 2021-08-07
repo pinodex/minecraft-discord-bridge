@@ -31,7 +31,7 @@ const matchRules = [
   {
     type: events.MC_SERVER_OPEN,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\]\[net\.minecraft\.server\.dedicated\.DedicatedServer \/\]: Done/,
+    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: Done/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 
