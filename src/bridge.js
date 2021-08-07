@@ -107,7 +107,7 @@ module.exports = () => {
     await discordNotificationSender.sendGenericEmbedMessage([{
       title: advancement,
       description: `**${username}** has made an advancement.`,
-      color: 15844367,
+      color: 5763719,
     }]);
   });
 
@@ -121,16 +121,6 @@ module.exports = () => {
       thumbnail: {
         url: avatar,
       },
-    }]);
-  });
-
-  minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement }) => {
-    const playerUuid = await getPlayerUuid(username);
-    const avatar = getPlayerAvatarUrl(playerUuid);
-
-    await discordNotificationSender.sendEmbedMessage(username, avatar, [{
-      title: `has made the advancement [${advancement}]`,
-      color: 5763719,
     }]);
   });
 
