@@ -98,16 +98,28 @@ async function main() {
 
   minecraft.on(events.MC_PLAYER_JOINED, async ({ username }) => {
     const playerUuid = await getPlayerUuid(username);
-    const avatar = getPlayerAvatarUrl(playerUuid);
+    const avatar = getPlayerAvatarUrl(playerUuid, 32);
 
-    await discordNotificationSender.sendPlayerMessage(username, avatar, `**${username}** joined the game`);
+    await discordNotificationSender.sendGenericEmbedMessage([{
+      title: `\`${username}\` joined the game`,
+      color: 5763719,
+      thumbnail: {
+        url: avatar,
+      },
+    }]);
   });
 
   minecraft.on(events.MC_PLAYER_LEFT, async ({ username }) => {
     const playerUuid = await getPlayerUuid(username);
-    const avatar = getPlayerAvatarUrl(playerUuid);
+    const avatar = getPlayerAvatarUrl(playerUuid, 32);
 
-    await discordNotificationSender.sendPlayerMessage(username, avatar, `**${username}** left the game`);
+    await discordNotificationSender.sendGenericEmbedMessage([{
+      title: `\`${username}\` left the game`,
+      color: 15548997,
+      thumbnail: {
+        url: avatar,
+      },
+    }]);
   });
 
   minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement }) => {
