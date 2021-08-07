@@ -1,12 +1,6 @@
 const { Rcon } = require('rcon-client');
+const { timeout } = require('../utils');
 const logger = require('../logger');
-
-/**
- * Resolve promise after the specified duration
- * @param  {Number} duration Timeout duration in milliseconds
- * @return {Promise}
- */
-const timeout = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
 
 class RconWrapper {
   /**
@@ -41,12 +35,12 @@ class RconWrapper {
    */
   async connect() {
     try {
+      logger.info('Connecting to RCON');
+
       await this.client.connect();
 
-      logger.info('Connected to RCON.');
+      logger.info('Connected to RCON');
     } catch (e) {
-      logger.error('Cannot connect to RCON');
-
       await this.retryConnection();
     }
   }
@@ -57,9 +51,6 @@ class RconWrapper {
     }
 
     await timeout(1000);
-
-    logger.info('Reconnecting to RCON');
-
     await this.connect();
   }
 

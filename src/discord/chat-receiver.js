@@ -70,6 +70,12 @@ class DiscordChatReceiver extends EventEmitter {
 
     const channel = await this.fetchChannel();
 
+    if (channel.type !== 'GUILD_TEXT') {
+      logger.error('Invalid Discord chat receiver channel type');
+
+      return;
+    }
+
     await this.registerCommands(channel.guildId);
   }
 

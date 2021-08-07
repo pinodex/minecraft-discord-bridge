@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "discord:housekeeping": "node index.js --discord-housekeeping",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ."
@@ -18,7 +19,8 @@
     "dotenv": "^10.0.0",
     "rcon-client": "^4.2.3",
     "tail": "^2.2.3",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "yargs": "^17.1.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
