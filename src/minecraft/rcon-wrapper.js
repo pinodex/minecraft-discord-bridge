@@ -30,6 +30,16 @@ class RconWrapper {
 
     logger.info(`Sending RCON message from ${username}: ${message}`);
   }
+
+  /**
+   * Send generic command and get response
+   *
+   * @param  {String} command Command
+   * @return {String}
+   */
+  async sendCommand(command) {
+    return this.client.send(command);
+  }
 }
 
 module.exports = RconWrapper;

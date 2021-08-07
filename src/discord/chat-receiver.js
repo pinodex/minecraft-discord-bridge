@@ -3,6 +3,13 @@ const { Client, Intents } = require('discord.js');
 const logger = require('../logger');
 const events = require('../events');
 
+const commands = [
+  {
+    name: 'playerlist',
+    description: 'Returns the current player list.',
+  },
+];
+
 class DiscordChatReceiver extends EventEmitter {
   /**
    * Constructs DiscordWebhookChatReceiver
@@ -24,6 +31,18 @@ class DiscordChatReceiver extends EventEmitter {
 
     this.client.on('ready', this.onClientReady.bind(this));
     this.client.on('messageCreate', this.onClientMessageCreate.bind(this));
+    this.client.on('interactionCreate', this.onClientInteractionCreate.bind(this));
+
+    this.commandHandlers = {};
+  }
+
+  /**
+   * Add command handler for Discord interactions
+   * @param {String} commandName Command name
+   * @param {Function} handler     Handler function
+   */
+  addCommandHandler(commandName, handler) {
+    this.commandHandlers[commandName] = handler;
   }
 
   /**
@@ -49,11 +68,15 @@ class DiscordChatReceiver extends EventEmitter {
 
     this.emit(events.DISCORD_CLIENT_READY, client);
 
-    await this.fetchChannel();
+    const channel = await this.fetchChannel();
+
+    await this.registerCommands(channel.guild);
   }
 
   /**
    * Discord.js Client Message Event Handler
+   *
+   * @param  {String} message Message
    */
   async onClientMessageCreate(message) {
     if (message.channelId !== this.channelId || !message.author) {
@@ -68,6 +91,44 @@ class DiscordChatReceiver extends EventEmitter {
       username: message.author.username,
       message: message.content,
     });
+  }
+
+  /**
+   * Discord.js Client Interaction
+   * @param  {Discord.CommandInteraction} interaction Discord Interaction
+   */
+  async onClientInteractionCreate(interaction) {
+    if (!interaction.isCommand()) {
+      return;
+    }
+
+    const handler = this.commandHandlers[interaction.commandName];
+
+    if (!handler) {
+      return;
+    }
+
+    const response = await handler(interaction);
+
+    await interaction.reply(response);
+  }
+
+  /**
+   * Register Bot Commands
+   *
+   * @param  {String} guildId Guild ID
+   * @return {Discord.ApplicationCommandManager}
+   */
+  async registerCommands(guildId) {
+    logger.debug('Registering commands');
+
+    const guild = await this.client.guilds.fetch(guildId);
+
+    const createdCommands = await Promise.all(
+      commands.map((command) => guild.commands.create(command)),
+    );
+
+    logger.info(`Registered ${createdCommands.length} commands`);
   }
 
   /**

@@ -69,6 +69,8 @@ async function main() {
   discordChatReceiver.on(events.DISCORD_USER_CHAT, async ({ username, message }) => {
     await rcon.sendMessage(`Discord: ${username}`, message);
   });
+
+  discordChatReceiver.addCommandHandler('playerlist', () => rcon.sendCommand('list'));
 }
 
 main().catch((error) => {
