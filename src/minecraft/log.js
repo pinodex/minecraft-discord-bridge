@@ -85,7 +85,21 @@ const matchRules = [
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
-      return { timestamp, username, advancement };
+      return {
+        timestamp, username, advancement, type: 'advancement',
+      };
+    },
+  },
+  {
+    type: events.MC_PLAYER_ADVANCEMENT,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has reached the goal \[(.*)]/,
+    handler(matches) {
+      const [timestamp, username, advancement] = matches.slice(1);
+
+      return {
+        timestamp, username, advancement, type: 'goal',
+      };
     },
   },
   {

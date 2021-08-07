@@ -103,10 +103,15 @@ module.exports = () => {
     }]);
   });
 
-  minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement }) => {
+  minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement, type }) => {
+    const types = {
+      goal: 'has reached the goal',
+      advancement: 'has made an advancement',
+    };
+
     await discordNotificationSender.sendGenericEmbedMessage([{
       title: advancement,
-      description: `**${username}** has made an advancement.`,
+      description: `**${username}** ${types[type]}.`,
       color: 5763719,
     }]);
   });
