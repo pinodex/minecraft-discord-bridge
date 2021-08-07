@@ -1,6 +1,8 @@
 const { WebhookClient } = require('discord.js');
 const logger = require('../logger');
 
+const DEFAULT_AVATARURL = 'https://cdn.discordapp.com/avatars/873436090982346823/2e293c07de6988d50b285ebf0ff10fab.png?size=128';
+
 /**
  * DiscordWebhookChatSender
  *
@@ -27,9 +29,10 @@ class DiscordWebhookChatSender {
     await this.client.send(payload);
   }
 
-  async sendGenericMessage(message) {
+  async sendGenericMessage(message, avatar = DEFAULT_AVATARURL) {
     const payload = {
-      username: 'Minecraft Server',
+      username: 'minecraft',
+      avatarURL: avatar,
       content: message,
     };
 
@@ -50,9 +53,10 @@ class DiscordWebhookChatSender {
     await this.client.send(payload);
   }
 
-  async sendGenericEmbedMessage(embeds) {
+  async sendGenericEmbedMessage(embeds, avatar = DEFAULT_AVATARURL) {
     const payload = {
-      username: 'Minecraft Server',
+      username: 'minecraft',
+      avatarURL: avatar,
       embeds,
     };
 
