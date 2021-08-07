@@ -43,14 +43,15 @@ async function getPlayerUuid(username) {
  * Get Minecraft Player Avatar URL
  *
  * @param  {String} uuid Minecraft Player UUID
+ * @param  {String} size Minecraft Player Avatar Size
  * @return {String}
  */
-function getPlayerAvatarUrl(uuid) {
+function getPlayerAvatarUrl(uuid, size = 100) {
   if (uuid) {
-    return `https://crafatar.com/avatars/${uuid}?size=100`;
+    return `https://crafatar.com/avatars/${uuid}?size=${size}`;
   }
 
-  return `https://crafatar.com/avatars/${STEVE_PLAYER_ID}?size=100`;
+  return `https://crafatar.com/avatars/${STEVE_PLAYER_ID}?size=${size}`;
 }
 
 module.exports = {
