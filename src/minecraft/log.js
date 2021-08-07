@@ -9,46 +9,6 @@ const events = require('../events');
  */
 const matchRules = [
   {
-    type: events.MC_PLAYER_CHAT,
-    /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \<(\w+)\> (.*)/,
-    handler(matches) {
-      const [timestamp, username, message] = matches.slice(1);
-
-      return { timestamp, username, message };
-    },
-  },
-  {
-    type: events.MC_PLAYER_JOINED,
-    /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
-    handler(matches) {
-      const [timestamp, username] = matches.slice(1);
-
-      return { timestamp, username };
-    },
-  },
-  {
-    type: events.MC_PLAYER_LEFT,
-    /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) left the game/,
-    handler(matches) {
-      const [timestamp, username] = matches.slice(1);
-
-      return { timestamp, username };
-    },
-  },
-  {
-    type: events.MC_PLAYER_MISC,
-    /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) (.*)/,
-    handler(matches) {
-      const [timestamp, username, message] = matches.slice(1);
-
-      return { timestamp, username, message };
-    },
-  },
-  {
     type: events.MC_SERVER_MESSAGE,
     /* eslint no-useless-escape: off */
     pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \[Server\] (.*)/,
@@ -96,6 +56,56 @@ const matchRules = [
       const [timestamp, uid] = matches.slice(1);
 
       return { timestamp, uid };
+    },
+  },
+  {
+    type: events.MC_PLAYER_CHAT,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \<(\w+)\> (.*)/,
+    handler(matches) {
+      const [timestamp, username, message] = matches.slice(1);
+
+      return { timestamp, username, message };
+    },
+  },
+  {
+    type: events.MC_PLAYER_JOINED,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
+    handler(matches) {
+      const [timestamp, username] = matches.slice(1);
+
+      return { timestamp, username };
+    },
+  },
+  {
+    type: events.MC_PLAYER_LEFT,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) left the game/,
+    handler(matches) {
+      const [timestamp, username] = matches.slice(1);
+
+      return { timestamp, username };
+    },
+  },
+  {
+    type: events.MC_PLAYER_ADVANCEMENT,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has made the advancement \[(.*)\]/,
+    handler(matches) {
+      const [timestamp, username, advancement] = matches.slice(1);
+
+      return { timestamp, username, advancement };
+    },
+  },
+  {
+    type: events.MC_PLAYER_MISC,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) (.*)/,
+    handler(matches) {
+      const [timestamp, username, message] = matches.slice(1);
+
+      return { timestamp, username, message };
     },
   },
 ];
