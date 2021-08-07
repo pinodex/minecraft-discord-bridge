@@ -66,7 +66,7 @@ class RconWrapper {
       return null;
     }
 
-    await this.client.send(`tellraw @a "<§9${username}§f> ${message}"`);
+    await this.client.send(`tellraw @a "§9<${username}>§f ${message}"`);
 
     logger.info(`Sending RCON message from ${username}: ${message}`);
 
