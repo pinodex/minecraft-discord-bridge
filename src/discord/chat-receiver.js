@@ -55,7 +55,6 @@ class DiscordChatReceiver extends EventEmitter {
   /**
    * Discord.js Client Message Event Handler
    */
-
   async onClientMessageCreate(message) {
     if (message.channelId !== this.channelId || !message.author) {
       return;
