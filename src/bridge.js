@@ -105,14 +105,26 @@ module.exports = () => {
 
   minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement, type }) => {
     const types = {
-      goal: 'has reached the goal',
-      advancement: 'has made an advancement',
+      goal: {
+        text: 'has reached the goal',
+        color: 5763719,
+      },
+      advancement: {
+        text: 'has made an advancement',
+        color: 5763719,
+      },
+      challenge: {
+        text: 'has completed the challenge',
+        color: 7419530,
+      },
     };
+
+    const { text, color } = types[type];
 
     await discordNotificationSender.sendGenericEmbedMessage([{
       title: advancement,
-      description: `**${username}** ${types[type]}.`,
-      color: 5763719,
+      description: `**${username}** ${text}.`,
+      color,
     }]);
   });
 

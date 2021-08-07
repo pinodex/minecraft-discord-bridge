@@ -103,6 +103,18 @@ const matchRules = [
     },
   },
   {
+    type: events.MC_PLAYER_ADVANCEMENT,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has completed the challenge \[(.*)]/,
+    handler(matches) {
+      const [timestamp, username, advancement] = matches.slice(1);
+
+      return {
+        timestamp, username, advancement, type: 'challenge',
+      };
+    },
+  },
+  {
     type: events.MC_PLAYER_JOINED,
     /* eslint no-useless-escape: off */
     pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
