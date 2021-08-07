@@ -13,6 +13,7 @@ const DiscordChatReceiver = require('./src/discord/chat-receiver');
 
 const {
   MINECRAFT_LOG_FILE,
+  MINECRAFT_HOST,
   MINECRAFT_RCON_HOST,
   MINECRAFT_RCON_PORT,
   MINECRAFT_RCON_PASSWORD,
@@ -20,6 +21,7 @@ const {
   DISCORD_MINECRAFT_CHAT_WEBHOOK_URL,
   DISCORD_MINECRAFT_NOTIFICATIONS_WEBHOOK_URL,
   DISCORD_MINECRAFT_BRIDGE_TOKEN,
+  DISCORD_MINECRAFT_STATUS_WEBHOOK_URL,
 } = process.env;
 
 logger.init();
@@ -33,6 +35,7 @@ const discordNotificationSender = new DiscordWebhookChatSender(
 );
 
 const discordChatSender = new DiscordWebhookChatSender(DISCORD_MINECRAFT_CHAT_WEBHOOK_URL);
+const discordStatusSender = new DiscordWebhookChatSender(DISCORD_MINECRAFT_STATUS_WEBHOOK_URL);
 
 const discordChatReceiver = new DiscordChatReceiver(
   DISCORD_MINECRAFT_BRIDGE_TOKEN,
@@ -42,6 +45,52 @@ const discordChatReceiver = new DiscordChatReceiver(
 async function main() {
   await rcon.connect();
   await discordChatReceiver.login();
+
+  minecraft.on(events.MC_SERVER_STARTING, () => {
+    discordStatusSender.sendGenericEmbedMessage([
+      {
+        title: 'Starting Server',
+        description: 'The server is now starting. Please wait for a few seconds',
+        color: 5763719,
+      },
+    ]);
+  });
+
+  minecraft.on(events.MC_SERVER_OPEN, () => {
+    discordStatusSender.sendGenericEmbedMessage([
+      {
+        title: 'Server is Up',
+        description: 'You can now connect to Minecraft Server',
+        color: 5763719,
+        footer: {
+          text: `IP: ${MINECRAFT_HOST}`,
+        },
+      },
+    ]);
+  });
+
+  minecraft.on(events.MC_SERVER_CLOSED, () => {
+    discordStatusSender.sendGenericEmbedMessage([
+      {
+        title: 'Server is Down',
+        description: 'Server is temporarily down. see you later',
+        color: 15548997,
+      },
+    ]);
+  });
+
+  minecraft.on(events.MC_SERVER_CRASHED, ({ uid }) => {
+    discordStatusSender.sendGenericEmbedMessage([
+      {
+        title: 'Server Crashed',
+        description: 'The server will start soon',
+        color: 15548997,
+        footer: {
+          text: `UID: ${uid}`,
+        },
+      },
+    ]);
+  });
 
   minecraft.on(events.MC_PLAYER_CHAT, async ({ username, message }) => {
     const playerUuid = await getPlayerUuid(username);
@@ -54,14 +103,24 @@ async function main() {
     const playerUuid = await getPlayerUuid(username);
     const avatar = getPlayerAvatarUrl(playerUuid);
 
-    await discordNotificationSender.sendPlayerMessage(username, avatar, 'joined the game');
+    await discordNotificationSender.sendPlayerMessage(username, avatar, `**${username}** joined the game`);
   });
 
   minecraft.on(events.MC_PLAYER_LEFT, async ({ username }) => {
     const playerUuid = await getPlayerUuid(username);
     const avatar = getPlayerAvatarUrl(playerUuid);
 
-    await discordNotificationSender.sendPlayerMessage(username, avatar, 'left the game');
+    await discordNotificationSender.sendPlayerMessage(username, avatar, `**${username}** left the game`);
+  });
+
+  minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement }) => {
+    const playerUuid = await getPlayerUuid(username);
+    const avatar = getPlayerAvatarUrl(playerUuid);
+
+    await discordNotificationSender.sendEmbedMessage(username, avatar, [{
+      title: `has made the advancement [${advancement}]`,
+      color: 5763719,
+    }]);
   });
 
   minecraft.on(events.MC_PLAYER_MISC, async ({ username, message }) => {
