@@ -11,7 +11,7 @@ const matchRules = [
   {
     type: events.MC_SERVER_MESSAGE,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \[Server\] (.*)/,
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \[Server\] (.*)/,
     handler(matches) {
       const [timestamp, message] = matches.slice(1);
 
@@ -21,7 +21,17 @@ const matchRules = [
   {
     type: events.MC_SERVER_STARTING,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[main\/INFO\] \[cpw\.mods\.modlauncher\.Launcher\/MODLAUNCHER\]: ModLauncher running: args/,
+    pattern: /\[(.*)\] \[main\/INFO\] \[cpw\.mods\.modlauncher\.LaunchServiceHandler\/MODLAUNCHER\]: Launching target 'fmlserver'/,
+    handler(matches) {
+      const [timestamp] = matches.slice(1);
+
+      return { timestamp };
+    },
+  },
+  {
+    type: events.MC_SERVER_STARTING,
+    /* eslint no-useless-escape: off */
+    pattern: /\[(.*)\] \[main\/INFO\] \[cp\.mo\.mo\.LaunchServiceHandler\/MODLAUNCHER\]: Launching target 'fmlserver'/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 
@@ -31,7 +41,7 @@ const matchRules = [
   {
     type: events.MC_SERVER_OPEN,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: Done/,
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: Done/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 
@@ -41,7 +51,7 @@ const matchRules = [
   {
     type: events.MC_SERVER_CLOSED,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: Stopping server/,
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: Stopping server/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 
@@ -51,7 +61,7 @@ const matchRules = [
   {
     type: events.MC_SERVER_CRASHED,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/FATAL\] \[net\.minecraftforge\.common\.ForgeMod\/\]: Preparing crash report with UUID (.*)/,
+    pattern: /\[(.*)\] \[Server thread\/FATAL\] \[net\.minecraftforge\.common\.ForgeMod\/\]: Preparing crash report with UUID (.*)/,
     handler(matches) {
       const [timestamp, uid] = matches.slice(1);
 
@@ -61,7 +71,7 @@ const matchRules = [
   {
     type: events.MC_PLAYER_CHAT,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \<(\w+)\> (.*)/,
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \<(\w+)\> (.*)/,
     handler(matches) {
       const [timestamp, username, message] = matches.slice(1);
 
@@ -71,7 +81,7 @@ const matchRules = [
   {
     type: events.MC_PLAYER_JOINED,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
     handler(matches) {
       const [timestamp, username] = matches.slice(1);
 
@@ -81,7 +91,7 @@ const matchRules = [
   {
     type: events.MC_PLAYER_LEFT,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.* \d{2}:\d{2}:\d{2}.\d{3})\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) left the game/,
+    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) left the game/,
     handler(matches) {
       const [timestamp, username] = matches.slice(1);
 
