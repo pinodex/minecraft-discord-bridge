@@ -95,7 +95,7 @@ module.exports = () => {
     const avatar = getPlayerAvatarUrl(playerUuid, 24);
 
     await discordNotificationSender.sendGenericEmbedMessage([{
-      title: `\`${username}\` joined the game`,
+      description: `**${username}** joined the game`,
       color: 5763719,
       thumbnail: {
         url: avatar,
@@ -121,7 +121,7 @@ module.exports = () => {
     const avatar = getPlayerAvatarUrl(playerUuid, 24);
 
     await discordNotificationSender.sendGenericEmbedMessage([{
-      title: `\`${username}\` left the game`,
+      description: `**${username}** left the game`,
       color: 15548997,
       thumbnail: {
         url: avatar,
