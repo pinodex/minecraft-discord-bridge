@@ -42,7 +42,7 @@ module.exports = () => {
       {
         title: 'Starting Server',
         description: 'The server is now starting. Please wait for a few seconds',
-        color: 5763719,
+        color: 15105570,
       },
     ]);
   });
