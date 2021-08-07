@@ -43,9 +43,6 @@ const discordChatReceiver = new DiscordChatReceiver(
 );
 
 async function main() {
-  await rcon.connect();
-  await discordChatReceiver.login();
-
   minecraft.on(events.MC_SERVER_STARTING, () => {
     discordStatusSender.sendGenericEmbedMessage([
       {
@@ -128,6 +125,9 @@ async function main() {
   });
 
   discordChatReceiver.addCommandHandler('playerlist', () => rcon.sendCommand('list'));
+
+  await rcon.connect();
+  await discordChatReceiver.login();
 }
 
 main().catch((error) => {
