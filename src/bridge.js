@@ -92,7 +92,7 @@ module.exports = () => {
 
   minecraft.on(events.MC_PLAYER_JOINED, async ({ username }) => {
     const playerUuid = await getPlayerUuid(username);
-    const avatar = getPlayerAvatarUrl(playerUuid, 32);
+    const avatar = getPlayerAvatarUrl(playerUuid, 24);
 
     await discordNotificationSender.sendGenericEmbedMessage([{
       title: `\`${username}\` joined the game`,
@@ -118,7 +118,7 @@ module.exports = () => {
 
   minecraft.on(events.MC_PLAYER_LEFT, async ({ username }) => {
     const playerUuid = await getPlayerUuid(username);
-    const avatar = getPlayerAvatarUrl(playerUuid, 32);
+    const avatar = getPlayerAvatarUrl(playerUuid, 24);
 
     await discordNotificationSender.sendGenericEmbedMessage([{
       title: `\`${username}\` left the game`,
