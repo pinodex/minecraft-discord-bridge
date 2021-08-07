@@ -70,7 +70,7 @@ class DiscordChatReceiver extends EventEmitter {
 
     const channel = await this.fetchChannel();
 
-    await this.registerCommands(channel.guild);
+    await this.registerCommands(channel.guildId);
   }
 
   /**
