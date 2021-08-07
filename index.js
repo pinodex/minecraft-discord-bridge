@@ -58,14 +58,6 @@ async function main() {
     discordNotificationSender.sendGenericMessage(`${username} disconnected.`);
   });
 
-  minecraft.on(events.MC_PLAYER_MISC, ({ username, message }) => {
-    discordNotificationSender.sendGenericMessage(`${username} ${message}.`);
-  });
-
-  minecraft.on(events.MC_SERVER_MESSAGE, ({ message }) => {
-    discordNotificationSender.sendGenericMessage(message);
-  });
-
   discordChatReceiver.on(events.DISCORD_USER_CHAT, async ({ username, message }) => {
     await rcon.sendMessage(`Discord: ${username}`, message);
   });

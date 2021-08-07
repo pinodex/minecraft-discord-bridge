@@ -9,6 +9,4 @@ module.exports = {
   MC_PLAYER_JOINED: 'mc.player.joined',
   MC_PLAYER_LEFT: 'mc.player.left',
   MC_PLAYER_DISCONNECTED: 'mc.player.disconnected',
-  MC_PLAYER_MISC: 'mc.player.misc',
-  MC_SERVER_MESSAGE: 'mc.server.message',
 };

@@ -38,26 +38,6 @@ const matchRules = [
       return { timestamp, username };
     },
   },
-  {
-    type: events.MC_PLAYER_MISC,
-    /* eslint no-useless-escape: off */
-    pattern: /\[(\d{2}:\d{2}:\d{2})\] \[Server thread\/INFO\]: (.*) (.*)/,
-    handler(matches) {
-      const [timestamp, username, message] = matches.slice(1);
-
-      return { timestamp, username, message };
-    },
-  },
-  {
-    type: events.MC_SERVER_MESSAGE,
-    /* eslint no-useless-escape: off */
-    pattern: /\[(\d{2}:\d{2}:\d{2})\] \[Server thread\/INFO\]: \[Server\] (.*)/,
-    handler(matches) {
-      const [timestamp, message] = matches.slice(1);
-
-      return { timestamp, message };
-    },
-  },
 ];
 
 /**
