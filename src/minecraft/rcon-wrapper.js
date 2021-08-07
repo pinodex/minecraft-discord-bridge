@@ -26,7 +26,7 @@ class RconWrapper {
    * @param  {String} message  Message
    */
   async sendMessage(username, message) {
-    await this.client.send(`say [${username}]: ${message}`);
+    await this.client.send(`tellraw @a "<${username}> ${message}"`);
 
     logger.info(`Sending RCON message from ${username}: ${message}`);
   }

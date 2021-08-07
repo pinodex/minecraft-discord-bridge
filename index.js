@@ -67,7 +67,7 @@ async function main() {
   });
 
   discordChatReceiver.on(events.DISCORD_USER_CHAT, async ({ username, message }) => {
-    await rcon.sendMessage(username, message);
+    await rcon.sendMessage(`Discord: ${username}`, message);
   });
 }
 
