@@ -103,6 +103,14 @@ module.exports = () => {
     }]);
   });
 
+  minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement }) => {
+    await discordNotificationSender.sendGenericEmbedMessage([{
+      title: advancement,
+      description: `**${username}** has made an advancement.`,
+      color: 15844367,
+    }]);
+  });
+
   minecraft.on(events.MC_PLAYER_LEFT, async ({ username }) => {
     const playerUuid = await getPlayerUuid(username);
     const avatar = getPlayerAvatarUrl(playerUuid, 32);

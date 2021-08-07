@@ -13,6 +13,7 @@ module.exports = {
   MC_SERVER_CRASHED: 'mc.server.crashed',
 
   MC_PLAYER_CHAT: 'mc.player.chat',
+  MC_PLAYER_ADVANCEMENT: 'mc.player.advancement',
   MC_PLAYER_JOINED: 'mc.player.joined',
   MC_PLAYER_LEFT: 'mc.player.left',
   MC_PLAYER_DISCONNECTED: 'mc.player.disconnected',
