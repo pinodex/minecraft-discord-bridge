@@ -69,9 +69,17 @@ class RconWrapper {
    * @param  {String} message  Message
    */
   async sendMessage(username, message) {
+    if (!this.connected) {
+      logger.info('RCON not connected. Cannot send message');
+
+      return null;
+    }
+
     await this.client.send(`tellraw @a "<§9${username}§f> ${message}"`);
 
     logger.info(`Sending RCON message from ${username}: ${message}`);
+
+    return true;
   }
 
   /**
@@ -81,6 +89,12 @@ class RconWrapper {
    * @return {String}
    */
   async sendCommand(command) {
+    if (!this.connected) {
+      logger.info('RCON not connected. Cannot send message');
+
+      return null;
+    }
+
     return this.client.send(command);
   }
 }
