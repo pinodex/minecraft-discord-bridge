@@ -38,10 +38,22 @@ class DiscordWebhookChatSender {
     await this.client.send(payload);
   }
 
-  async sendEmbedMessage(embeds) {
+  async sendEmbedMessage(username, avatar, embeds) {
+    const payload = {
+      username,
+      avatarURL: avatar,
+      embeds,
+    };
+
+    logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
+
+    await this.client.send(payload);
+  }
+
+  async sendGenericEmbedMessage(embeds) {
     const payload = {
       username: 'Minecraft Server',
-      embeds
+      embeds,
     };
 
     logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
