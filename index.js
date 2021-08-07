@@ -47,19 +47,28 @@ async function main() {
     const playerUuid = await getPlayerUuid(username);
     const avatar = getPlayerAvatarUrl(playerUuid);
 
-    await discordChatSender.sendPlayerMessage(`Minecraft: ${username}`, avatar, message);
+    await discordChatSender.sendPlayerMessage(username, avatar, message);
   });
 
-  minecraft.on(events.MC_PLAYER_JOINED, ({ username }) => {
-    discordNotificationSender.sendGenericMessage(`${username} joined.`);
+  minecraft.on(events.MC_PLAYER_JOINED, async ({ username }) => {
+    const playerUuid = await getPlayerUuid(username);
+    const avatar = getPlayerAvatarUrl(playerUuid);
+
+    await discordNotificationSender.sendPlayerMessage(username, avatar, 'joined the game');
   });
 
-  minecraft.on(events.MC_PLAYER_DISCONNECTED, ({ username }) => {
-    discordNotificationSender.sendGenericMessage(`${username} disconnected.`);
+  minecraft.on(events.MC_PLAYER_LEFT, async ({ username }) => {
+    const playerUuid = await getPlayerUuid(username);
+    const avatar = getPlayerAvatarUrl(playerUuid);
+
+    await discordNotificationSender.sendPlayerMessage(username, avatar, 'left the game');
   });
 
-  minecraft.on(events.MC_PLAYER_MISC, ({ username, message }) => {
-    discordNotificationSender.sendGenericMessage(`${username} ${message}.`);
+  minecraft.on(events.MC_PLAYER_MISC, async ({ username, message }) => {
+    const playerUuid = await getPlayerUuid(username);
+    const avatar = getPlayerAvatarUrl(playerUuid);
+
+    await discordNotificationSender.sendPlayerMessage(username, avatar, message);
   });
 
   minecraft.on(events.MC_SERVER_MESSAGE, ({ message }) => {
@@ -67,7 +76,7 @@ async function main() {
   });
 
   discordChatReceiver.on(events.DISCORD_USER_CHAT, async ({ username, message }) => {
-    await rcon.sendMessage(`Discord: ${username}`, message);
+    await rcon.sendMessage(username, message);
   });
 }
 
