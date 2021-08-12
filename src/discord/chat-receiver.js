@@ -1,12 +1,26 @@
 const EventEmitter = require('events');
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, ApplicationCommandOptionType } = require('discord.js');
 const logger = require('../logger');
 const events = require('../events');
 
-const commands = [
+const guildCommands = [
   {
     name: 'playerlist',
     description: 'Returns the current player list.',
+  },
+];
+
+const botCommands = [
+  {
+    name: 'register',
+    description: 'Register user.',
+    options: [
+      {
+        name: 'username',
+        description: 'Username',
+        type: 'STRING',
+      }
+    ],
   },
 ];
 
@@ -76,7 +90,8 @@ class DiscordChatReceiver extends EventEmitter {
       return;
     }
 
-    await this.registerCommands(channel.guildId);
+    await this.registerGuildCommands(channel.guildId);
+    await this.registerBotCommands();
   }
 
   /**
@@ -125,13 +140,35 @@ class DiscordChatReceiver extends EventEmitter {
    * @param  {String} guildId Guild ID
    * @return {Discord.ApplicationCommandManager}
    */
-  async registerCommands(guildId) {
-    logger.debug('Registering commands');
+  async registerGuildCommands(guildId) {
+    logger.debug('Registering guild commands');
 
     const guild = await this.client.guilds.fetch(guildId);
 
     const createdCommands = await Promise.all(
-      commands.map((command) => guild.commands.create(command)),
+      guildCommands.map((command) => guild.commands.create(command)),
+    );
+
+    logger.info(`Registered ${createdCommands.length} commands`);
+  }
+
+  /**
+   * Register Bot Commands
+   *
+   * @param  {String} guildId Guild ID
+   * @return {Discord.ApplicationCommandManager}
+   */
+  async registerBotCommands(guildId) {
+    if (this.client.application === null) {
+      logger.info('client.application is null');
+
+      return;
+    }
+
+    logger.debug('Registering bot commands');
+
+    const createdCommands = await Promise.all(
+      botCommands.map((command) => this.client.application.commands.create(command)),
     );
 
     logger.info(`Registered ${createdCommands.length} commands`);

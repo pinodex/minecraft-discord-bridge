@@ -147,6 +147,13 @@ module.exports = () => {
 
   discordChatReceiver.addCommandHandler('playerlist', () => rcon.sendCommand('list'));
 
+  discordChatReceiver.addCommandHandler('register', (interaction) => {
+    console.log(interaction);
+    console.log(interaction.options.getString('username'));
+
+    return 'ok';
+  });
+
   rcon.connect();
   discordChatReceiver.login();
 };
