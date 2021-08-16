@@ -20,6 +20,15 @@ const {
   DISCORD_MINECRAFT_STATUS_WEBHOOK_URL,
 } = process.env;
 
+const players = {
+  '414331997583048705': {
+    ign: 'Keijien',
+  },
+  '360847802336804867': {
+    ign: 'cypriux',
+  },
+};
+
 module.exports = () => {
   const minecraft = new MinecraftLogListener(MINECRAFT_LOG_FILE);
 
@@ -147,11 +156,17 @@ module.exports = () => {
 
   discordChatReceiver.addCommandHandler('playerlist', () => rcon.sendCommand('list'));
 
-  discordChatReceiver.addCommandHandler('register', (interaction) => {
-    console.log(interaction);
-    console.log(interaction.options.getString('username'));
+  discordChatReceiver.addCommandHandler('unregister', async (interaction) => {
+    const { user } = interaction;
+    const { ign } = players[user.id];
 
-    return 'ok';
+    if (!(user.id in players)) {
+      return 'You currently not on the player list. please message cypriux';
+    }
+
+    const res = await rcon.sendCommand(`simplelogin unregister ${ign}`);
+
+    return res;
   });
 
   rcon.connect();

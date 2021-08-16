@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const { Client, Intents, ApplicationCommandOptionType } = require('discord.js');
+const { Client, Intents } = require('discord.js');
 const logger = require('../logger');
 const events = require('../events');
 
@@ -12,15 +12,8 @@ const guildCommands = [
 
 const botCommands = [
   {
-    name: 'register',
-    description: 'Register user.',
-    options: [
-      {
-        name: 'username',
-        description: 'Username',
-        type: 'STRING',
-      }
-    ],
+    name: 'unregister',
+    description: 'Unregister user on SimpleLogin',
   },
 ];
 
@@ -158,7 +151,7 @@ class DiscordChatReceiver extends EventEmitter {
    * @param  {String} guildId Guild ID
    * @return {Discord.ApplicationCommandManager}
    */
-  async registerBotCommands(guildId) {
+  async registerBotCommands() {
     if (this.client.application === null) {
       logger.info('client.application is null');
 
