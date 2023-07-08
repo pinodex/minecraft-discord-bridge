@@ -1,7 +1,7 @@
-const EventEmitter = require('events');
-const { Tail } = require('tail');
-const logger = require('../logger');
-const events = require('../events');
+const EventEmitter = require("events");
+const { Tail } = require("tail");
+const logger = require("../logger");
+const events = require("../events");
 
 /**
  * List of match rules
@@ -11,7 +11,8 @@ const matchRules = [
   {
     type: events.MC_SERVER_MESSAGE,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \[Server\] (.*)/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: \[Server\] (.*)/,
     handler(matches) {
       const [timestamp, message] = matches.slice(1);
 
@@ -21,27 +22,30 @@ const matchRules = [
   {
     type: events.MC_SERVER_STARTING,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[main\/INFO\] \[cpw\.mods\.modlauncher\.LaunchServiceHandler\/MODLAUNCHER\]: Launching target 'fmlserver'/,
+    pattern:
+      /\[(.*)\] \[main\/INFO\] \[cpw\.mods\.modlauncher\.Launcher\/MODLAUNCHER\]: ModLauncher running:/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 
       return { timestamp };
     },
   },
-  {
-    type: events.MC_SERVER_STARTING,
-    /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[main\/INFO\] \[cp\.mo\.mo\.LaunchServiceHandler\/MODLAUNCHER\]: Launching target 'fmlserver'/,
-    handler(matches) {
-      const [timestamp] = matches.slice(1);
+  // {
+  //   type: events.MC_SERVER_STARTING,
+  //   /* eslint no-useless-escape: off */
+  //   pattern:
+  //     /\[(.*)\] \[main\/INFO\] \[cp\.mo\.mo\.LaunchServiceHandler\/MODLAUNCHER\]: Launching target 'fmlserver'/,
+  //   handler(matches) {
+  //     const [timestamp] = matches.slice(1);
 
-      return { timestamp };
-    },
-  },
+  //     return { timestamp };
+  //   },
+  // },
   {
     type: events.MC_SERVER_OPEN,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: Done/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: Done/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 
@@ -51,7 +55,8 @@ const matchRules = [
   {
     type: events.MC_SERVER_CLOSED,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: Stopping server/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: Stopping server/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 
@@ -61,7 +66,8 @@ const matchRules = [
   {
     type: events.MC_SERVER_CRASHED,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/FATAL\] \[net\.minecraftforge\.common\.ForgeMod\/\]: Preparing crash report with UUID (.*)/,
+    pattern:
+      /\[(.*)\] \[Server thread\/FATAL\] \[net\.minecraftforge\.common\.ForgeMod\/\]: Preparing crash report with UUID (.*)/,
     handler(matches) {
       const [timestamp, uid] = matches.slice(1);
 
@@ -71,7 +77,8 @@ const matchRules = [
   {
     type: events.MC_PLAYER_CHAT,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \<(\w+)\> (.*)/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \<(\w+)\> (.*)/,
     handler(matches) {
       const [timestamp, username, message] = matches.slice(1);
 
@@ -81,43 +88,56 @@ const matchRules = [
   {
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has made the advancement \[(.*)]/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has made the advancement \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
       return {
-        timestamp, username, advancement, type: 'advancement',
+        timestamp,
+        username,
+        advancement,
+        type: "advancement",
       };
     },
   },
   {
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has reached the goal \[(.*)]/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has reached the goal \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
       return {
-        timestamp, username, advancement, type: 'goal',
+        timestamp,
+        username,
+        advancement,
+        type: "goal",
       };
     },
   },
   {
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has completed the challenge \[(.*)]/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has completed the challenge \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
       return {
-        timestamp, username, advancement, type: 'challenge',
+        timestamp,
+        username,
+        advancement,
+        type: "challenge",
       };
     },
   },
   {
     type: events.MC_PLAYER_JOINED,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
     handler(matches) {
       const [timestamp, username] = matches.slice(1);
 
@@ -127,7 +147,8 @@ const matchRules = [
   {
     type: events.MC_PLAYER_LEFT,
     /* eslint no-useless-escape: off */
-    pattern: /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) left the game/,
+    pattern:
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) left the game/,
     handler(matches) {
       const [timestamp, username] = matches.slice(1);
 
@@ -154,8 +175,8 @@ class MinecraftLogListener extends EventEmitter {
       },
     });
 
-    this.tail.on('line', this.handleLine.bind(this));
-    this.tail.on('error', logger.error);
+    this.tail.on("line", this.handleLine.bind(this));
+    this.tail.on("error", logger.error);
 
     logger.info(`Listening to log file ${logFile}`);
   }
@@ -166,7 +187,7 @@ class MinecraftLogListener extends EventEmitter {
    * @param  {String} line Log line
    */
   handleLine(line) {
-    if (typeof line !== 'string') {
+    if (typeof line !== "string") {
       return;
     }
 
