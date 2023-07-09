@@ -30,17 +30,6 @@ const matchRules = [
       return { timestamp };
     },
   },
-  // {
-  //   type: events.MC_SERVER_STARTING,
-  //   /* eslint no-useless-escape: off */
-  //   pattern:
-  //     /\[(.*)\] \[main\/INFO\] \[cp\.mo\.mo\.LaunchServiceHandler\/MODLAUNCHER\]: Launching target 'fmlserver'/,
-  //   handler(matches) {
-  //     const [timestamp] = matches.slice(1);
-
-  //     return { timestamp };
-  //   },
-  // },
   {
     type: events.MC_SERVER_OPEN,
     /* eslint no-useless-escape: off */
