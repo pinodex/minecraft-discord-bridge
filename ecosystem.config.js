@@ -6,7 +6,8 @@ module.exports = {
     },
     {
       name: 'minecraft-discord-bridge-housekeeping',
-      script: './index.js --discord-housekeeping',
+      script: './index.js',
+      args: '--discord-housekeeping',
       cron_restart: '0 8 * * *',
     },
   ],
