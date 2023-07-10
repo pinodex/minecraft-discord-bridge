@@ -1,9 +1,9 @@
-const cacheManager = require("cache-manager");
-const axios = require("axios");
-const logger = require("../logger");
+const cacheManager = require('cache-manager');
+const axios = require('axios');
+const logger = require('../logger');
 
 const cache = cacheManager.caching({
-  store: "memory",
+  store: 'memory',
   max: 100,
   ttl: 3600,
 });
@@ -12,7 +12,7 @@ const cache = cacheManager.caching({
  * Generic Minecraft Player ID
  * @type {String}
  */
-const STEVE_PLAYER_ID = "8667ba71b85a4004af54457a9734eed7";
+const STEVE_PLAYER_ID = '8667ba71b85a4004af54457a9734eed7';
 
 /**
  * Get Minecraft Player UUID
@@ -48,10 +48,10 @@ async function getPlayerUuid(username) {
  */
 function getPlayerAvatarUrl(user, size = 100) {
   if (user) {
-    return `https://minotar.net/avatar/${user}?size=${size}`;
+    return `https://minotar.net/avatar/${user}/${size}`;
   }
 
-  return `https://minotar.net/avatar/${STEVE_PLAYER_ID}?size=${size}`;
+  return `https://minotar.net/avatar/${STEVE_PLAYER_ID}/${size}`;
 }
 
 module.exports = {
