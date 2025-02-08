@@ -80,7 +80,7 @@ const matchRules = [
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) has made the advancement \[(.*)]/,
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: (\w+) has made the advancement \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
@@ -96,7 +96,7 @@ const matchRules = [
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) has reached the goal \[(.*)]/,
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: (\w+) has reached the goal \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
@@ -112,7 +112,7 @@ const matchRules = [
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) has completed the challenge \[(.*)]/,
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: (\w+) has completed the challenge \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
