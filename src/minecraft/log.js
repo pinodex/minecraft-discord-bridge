@@ -78,7 +78,7 @@ const matchRules = [
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has made the advancement \[(.*)]/,
+      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) has made the advancement \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
@@ -94,7 +94,7 @@ const matchRules = [
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has reached the goal \[(.*)]/,
+      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) has reached the goal \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
@@ -110,7 +110,7 @@ const matchRules = [
     type: events.MC_PLAYER_ADVANCEMENT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/]: (\w+) has completed the challenge \[(.*)]/,
+      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) has completed the challenge \[(.*)]/,
     handler(matches) {
       const [timestamp, username, advancement] = matches.slice(1);
 
@@ -126,7 +126,7 @@ const matchRules = [
     type: events.MC_PLAYER_JOINED,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) joined the game/,
+      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) joined the game/,
     handler(matches) {
       const [timestamp, username] = matches.slice(1);
 
@@ -137,7 +137,7 @@ const matchRules = [
     type: events.MC_PLAYER_LEFT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: (\w+) left the game/,
+      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: (\w+) left the game/,
     handler(matches) {
       const [timestamp, username] = matches.slice(1);
 
