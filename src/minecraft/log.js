@@ -12,7 +12,7 @@ const matchRules = [
     type: events.MC_SERVER_MESSAGE,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: \[Server\] (.*)/,
+      /\[(.*)\] \[Server thread\/INFO\] \[minecraft\/MinecraftServer\]: \[Not Secure\] \[Server\] (.*)/,
     handler(matches) {
       const [timestamp, message] = matches.slice(1);
 
@@ -67,7 +67,7 @@ const matchRules = [
     type: events.MC_PLAYER_CHAT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: \<(\w+)\> (.*)/,
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: \[Not Secure\] \<(\w+)\> (.*)/,
     handler(matches) {
       const [timestamp, username, message] = matches.slice(1);
 
@@ -137,7 +137,7 @@ const matchRules = [
     type: events.MC_PLAYER_LEFT,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.dedicated\.DedicatedServer\/\]: (\w+) left the game/,
+      /\[(.*)\] \[Server thread\/INFO\] \[net\.minecraft\.server\.MinecraftServer\/\]: (\w+) left the game/,
     handler(matches) {
       const [timestamp, username] = matches.slice(1);
 
