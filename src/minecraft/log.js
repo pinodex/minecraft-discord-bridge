@@ -1,7 +1,7 @@
-const EventEmitter = require("events");
-const { Tail } = require("tail");
-const logger = require("../logger");
-const events = require("../events");
+const EventEmitter = require('events');
+const { Tail } = require('tail');
+const logger = require('../logger');
+const events = require('../events');
 
 /**
  * List of match rules
@@ -86,7 +86,7 @@ const matchRules = [
         timestamp,
         username,
         advancement,
-        type: "advancement",
+        type: 'advancement',
       };
     },
   },
@@ -102,7 +102,7 @@ const matchRules = [
         timestamp,
         username,
         advancement,
-        type: "goal",
+        type: 'goal',
       };
     },
   },
@@ -118,7 +118,7 @@ const matchRules = [
         timestamp,
         username,
         advancement,
-        type: "challenge",
+        type: 'challenge',
       };
     },
   },
@@ -164,8 +164,8 @@ class MinecraftLogListener extends EventEmitter {
       },
     });
 
-    this.tail.on("line", this.handleLine.bind(this));
-    this.tail.on("error", logger.error);
+    this.tail.on('line', this.handleLine.bind(this));
+    this.tail.on('error', logger.error);
 
     logger.info(`Listening to log file ${logFile}`);
   }
@@ -176,7 +176,7 @@ class MinecraftLogListener extends EventEmitter {
    * @param  {String} line Log line
    */
   handleLine(line) {
-    if (typeof line !== "string") {
+    if (typeof line !== 'string') {
       return;
     }
 
