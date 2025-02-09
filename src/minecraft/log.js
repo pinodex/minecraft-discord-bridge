@@ -25,7 +25,7 @@ const matchRules = [
     type: events.MC_SERVER_STARTING,
     /* eslint no-useless-escape: off */
     pattern:
-      /\[(.*)\] \[main\/INFO\] \[cpw\.mods\.modlauncher\.Launcher\/MODLAUNCHER\]: ModLauncher running:/,
+      /\[(.*)\] \[main\/INFO\] \[cpw\.mods\.modlauncher\.Launcher\/MODLAUNCHER\]: ModLauncher/,
     handler(matches) {
       const [timestamp] = matches.slice(1);
 

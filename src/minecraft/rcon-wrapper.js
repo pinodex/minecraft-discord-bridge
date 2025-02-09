@@ -50,7 +50,7 @@ class RconWrapper {
       return;
     }
 
-    await timeout(1000);
+    await timeout(10000);
     await this.connect();
   }
 
