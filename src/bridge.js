@@ -1,6 +1,6 @@
 const events = require('./events');
 
-const { MinecraftLogListenerSFTP } = require('./minecraft/log');
+const { MinecraftLogListenerSFTP, MinecraftLogListener } = require('./minecraft/log');
 const { getPlayerAvatarUrl } = require('./minecraft/player');
 const RconWrapper = require('./minecraft/rcon-wrapper');
 
@@ -32,7 +32,7 @@ const sftpConfig = {
 };
 
 module.exports = () => {
-  const minecraft = new MinecraftLogListenerSFTP(sftpConfig, MINECRAFT_LOG_FILE);
+  const minecraft = new MinecraftLogListener(MINECRAFT_LOG_FILE);
 
   const rcon = new RconWrapper(MINECRAFT_RCON_HOST, MINECRAFT_RCON_PORT, MINECRAFT_RCON_PASSWORD);
 
