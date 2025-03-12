@@ -1,7 +1,9 @@
+const path = require('path');
+
 module.exports = {
   apps: [
     {
-      name: 'minecraft-discord-bridge-bot',
+      name: path.basename(__dirname),
       script: './index.js',
     },
   ],
