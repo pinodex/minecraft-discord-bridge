@@ -13,6 +13,7 @@ const {
   MINECRAFT_RCON_HOST,
   MINECRAFT_RCON_PORT,
   MINECRAFT_RCON_PASSWORD,
+  MINECRAFT_SERVER,
   DISCORD_MINECRAFT_CHAT_CHANNEL_ID,
   DISCORD_MINECRAFT_CHAT_WEBHOOK_URL,
   DISCORD_MINECRAFT_NOTIFICATIONS_WEBHOOK_URL,
@@ -23,6 +24,9 @@ const {
   // MINECRAFT_SFTP_USERNAME,
   // MINECRAFT_SFTP_PASSWORD,
 } = process.env;
+
+const isCobblemon = MINECRAFT_SERVER === 'cobblemon';
+const isSMP = MINECRAFT_SERVER === 'smp';
 
 // const sftpConfig = {
 //   host: MINECRAFT_SFTP_HOST,
@@ -159,17 +163,13 @@ module.exports = () => {
     await rcon.sendMessage(username, message);
   });
 
-  discordChatReceiver.addCommandHandler('playerlist', (data) => {
-    const { MINECRAFT_SERVER } = process.env;
+  if (isCobblemon) {
+    discordChatReceiver.addCommandHandler('playerlist-cobblemon', () => rcon.sendCommand('list'));
+  }
 
-    const server = data.options.getString('server');
-
-    if (MINECRAFT_SERVER === server) {
-      return rcon.sendCommand('list');
-    }
-
-    return `${server.toUpperCase()} server is down.`;
-  });
+  if (isSMP) {
+    discordChatReceiver.addCommandHandler('playerlist-smp', () => rcon.sendCommand('list'));
+  }
 
   rcon.connect();
   discordChatReceiver.login();
