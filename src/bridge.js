@@ -1,6 +1,6 @@
 const events = require('./events');
 
-const { MinecraftLogListenerSFTP, MinecraftLogListener } = require('./minecraft/log');
+const { MinecraftLogListener } = require('./minecraft/log');
 const { getPlayerAvatarUrl } = require('./minecraft/player');
 const RconWrapper = require('./minecraft/rcon-wrapper');
 
@@ -18,18 +18,18 @@ const {
   DISCORD_MINECRAFT_NOTIFICATIONS_WEBHOOK_URL,
   DISCORD_MINECRAFT_BRIDGE_TOKEN,
   DISCORD_MINECRAFT_STATUS_WEBHOOK_URL,
-  MINECRAFT_SFTP_HOST,
-  MINECRAFT_SFTP_PORT,
-  MINECRAFT_SFTP_USERNAME,
-  MINECRAFT_SFTP_PASSWORD,
+  // MINECRAFT_SFTP_HOST,
+  // MINECRAFT_SFTP_PORT,
+  // MINECRAFT_SFTP_USERNAME,
+  // MINECRAFT_SFTP_PASSWORD,
 } = process.env;
 
-const sftpConfig = {
-  host: MINECRAFT_SFTP_HOST,
-  port: MINECRAFT_SFTP_PORT,
-  username: MINECRAFT_SFTP_USERNAME,
-  password: MINECRAFT_SFTP_PASSWORD,
-};
+// const sftpConfig = {
+//   host: MINECRAFT_SFTP_HOST,
+//   port: MINECRAFT_SFTP_PORT,
+//   username: MINECRAFT_SFTP_USERNAME,
+//   password: MINECRAFT_SFTP_PASSWORD,
+// };
 
 module.exports = () => {
   const minecraft = new MinecraftLogListener(MINECRAFT_LOG_FILE);
@@ -159,7 +159,17 @@ module.exports = () => {
     await rcon.sendMessage(username, message);
   });
 
-  discordChatReceiver.addCommandHandler('playerlist', () => rcon.sendCommand('list'));
+  discordChatReceiver.addCommandHandler('playerlist', (data) => {
+    const { MINECRAFT_SERVER } = process.env;
+
+    const server = data.options.getString('server');
+
+    if (MINECRAFT_SERVER === server) {
+      return rcon.sendCommand('list');
+    }
+
+    return 'Invalid Server';
+  });
 
   rcon.connect();
   discordChatReceiver.login();
