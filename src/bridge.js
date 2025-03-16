@@ -168,7 +168,7 @@ module.exports = () => {
       return rcon.sendCommand('list');
     }
 
-    return 'Invalid Server';
+    return `${server.toUpperCase()} server is down.`;
   });
 
   rcon.connect();
