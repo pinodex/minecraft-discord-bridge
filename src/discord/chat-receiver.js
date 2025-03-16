@@ -3,33 +3,14 @@ const { Client, Intents } = require('discord.js');
 const logger = require('../logger');
 const events = require('../events');
 
-const SERVER = {
-  SMP: 'smp',
-  COBBLEMON: 'cobblemon',
-};
-
 const commands = [
   {
-    name: 'playerlist',
-    description: 'Returns the current player list.',
-    options: [
-      {
-        type: 3,
-        description: 'Server Type',
-        name: 'server',
-        required: true,
-        choices: [
-          {
-            name: 'SMP',
-            value: SERVER.SMP,
-          },
-          {
-            name: 'Cobblemon',
-            value: SERVER.COBBLEMON,
-          },
-        ],
-      },
-    ],
+    name: 'playerlist-cobblemon',
+    description: 'Returns the current player list in Cobblemon Server.',
+  },
+  {
+    name: 'playerlist-smp',
+    description: 'Returns the current player list in SMP Server.',
   },
 ];
 
