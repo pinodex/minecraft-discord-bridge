@@ -1,16 +1,17 @@
 require('dotenv').config();
 
+const logger = require('./src/lib/logger');
+logger.init();
+
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
-
-const logger = require('./src/logger');
 const bridge = require('./src/bridge');
 const discordChatCleaner = require('./src/discord/chat-cleaner');
 
-logger.init();
-
 const { argv } = yargs(hideBin(process.argv));
 const { discordHousekeeping } = argv;
+
+
 
 if (discordHousekeeping) {
   discordChatCleaner()

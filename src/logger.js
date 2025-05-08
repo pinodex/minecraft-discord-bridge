@@ -11,7 +11,6 @@ exports.init = () => {
   instance = createLogger({
     level: 'debug',
     format: format.simple(),
-
     transports: [new transports.Console()],
   });
 

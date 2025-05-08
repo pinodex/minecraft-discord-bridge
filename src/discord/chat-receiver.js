@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const { Client, Intents } = require('discord.js');
 const logger = require('../logger');
-const events = require('../events');
+const { EVENTS} = require('../constants');
 
 const commands = [
   {
@@ -70,7 +70,7 @@ class DiscordChatReceiver extends EventEmitter {
   async onClientReady(client) {
     logger.info(`Discord Client Ready. App ID: ${client.application.id}`);
 
-    this.emit(events.DISCORD_CLIENT_READY, client);
+    this.emit(EVENTS.DISCORD_CLIENT_READY, client);
 
     const channel = await this.fetchChannel();
 
@@ -97,7 +97,7 @@ class DiscordChatReceiver extends EventEmitter {
       return;
     }
 
-    this.emit(events.DISCORD_USER_CHAT, {
+    this.emit(EVENTS.DISCORD_USER_CHAT, {
       username: message.author.username,
       message: message.content,
     });

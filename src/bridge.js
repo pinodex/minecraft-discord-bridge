@@ -1,4 +1,4 @@
-const events = require('./events');
+const { EVENTS } = require('./constants');
 
 const { MinecraftLogListener } = require('./minecraft/log');
 const { getPlayerAvatarUrl } = require('./minecraft/player');
@@ -6,6 +6,7 @@ const RconWrapper = require('./minecraft/rcon-wrapper');
 
 const DiscordWebhookChatSender = require('./discord/chat-webhook-sender');
 const DiscordChatReceiver = require('./discord/chat-receiver');
+const { getLoggerInstance } = require("./lib/logger");
 
 const {
   MINECRAFT_LOG_FILE,
@@ -35,8 +36,43 @@ const isSMP = MINECRAFT_SERVER === 'smp';
 //   password: MINECRAFT_SFTP_PASSWORD,
 // };
 
-module.exports = () => {
-  const minecraft = new MinecraftLogListener(MINECRAFT_LOG_FILE);
+/**
+ * @typedef BridgeConfigRCON
+ * @property {string} host
+ * @property {string} port
+ * @property {string} password
+ */
+
+/**
+ * @typedef BridgeConfigDiscordWebhook
+ * @property {string} chat
+ * @property {string} notifications
+ * @property {string} status
+ */
+
+/**
+ * @typedef BridgeConfigDiscord
+ * @property {string} chatChannelId
+ * @property {BridgeConfigDiscordWebhook} webhooks
+ */
+
+/**
+ * @typedef BridgeConfig
+ * @property {string} key
+ * @property {string} name
+ * @property {string} logs
+ * @property {string} host
+ * @property {BridgeConfigRCON} rcon
+ * @property {BridgeConfigDiscord} discord
+ *
+ */
+
+/**
+ * Minecraft Bridge
+ * @prop {BridgeConfig} config
+ */
+module.exports = (config) => {
+  const minecraft = new MinecraftLogListener('LHGSMP3', 'Localhost Gaming SMP 3', MINECRAFT_LOG_FILE);
 
   const rcon = new RconWrapper(MINECRAFT_RCON_HOST, MINECRAFT_RCON_PORT, MINECRAFT_RCON_PASSWORD);
 
@@ -52,7 +88,7 @@ module.exports = () => {
     DISCORD_MINECRAFT_CHAT_CHANNEL_ID,
   );
 
-  minecraft.on(events.MC_SERVER_STARTING, () => {
+  minecraft.on(EVENTS.MC_SERVER_STARTING, () => {
     discordStatusSender.sendGenericEmbedMessage([
       {
         title: 'Starting Server',
@@ -62,7 +98,7 @@ module.exports = () => {
     ]);
   });
 
-  minecraft.on(events.MC_SERVER_OPEN, () => {
+  minecraft.on(EVENTS.MC_SERVER_OPEN, () => {
     discordStatusSender.sendGenericEmbedMessage([
       {
         title: 'Server is Up',
@@ -75,7 +111,7 @@ module.exports = () => {
     ]);
   });
 
-  minecraft.on(events.MC_SERVER_CLOSED, () => {
+  minecraft.on(EVENTS.MC_SERVER_CLOSED, () => {
     discordStatusSender.sendGenericEmbedMessage([
       {
         title: 'Server is Down',
@@ -85,7 +121,7 @@ module.exports = () => {
     ]);
   });
 
-  minecraft.on(events.MC_SERVER_CRASHED, ({ uid }) => {
+  minecraft.on(EVENTS.MC_SERVER_CRASHED, ({ uid }) => {
     discordStatusSender.sendGenericEmbedMessage([
       {
         title: 'Server Crashed',
@@ -98,13 +134,13 @@ module.exports = () => {
     ]);
   });
 
-  minecraft.on(events.MC_PLAYER_CHAT, async ({ username, message }) => {
+  minecraft.on(EVENTS.MC_PLAYER_CHAT, async ({ username, message }) => {
     const avatar = getPlayerAvatarUrl(username);
 
     await discordChatSender.sendPlayerMessage(username, avatar, message);
   });
 
-  minecraft.on(events.MC_PLAYER_JOINED, async ({ username }) => {
+  minecraft.on(EVENTS.MC_PLAYER_JOINED, async ({ username }) => {
     const avatar = getPlayerAvatarUrl(username, 24);
 
     await discordNotificationSender.sendGenericEmbedMessage([
@@ -118,7 +154,7 @@ module.exports = () => {
     ]);
   });
 
-  minecraft.on(events.MC_PLAYER_ADVANCEMENT, async ({ username, advancement, type }) => {
+  minecraft.on(EVENTS.MC_PLAYER_ADVANCEMENT, async ({ username, advancement, type }) => {
     const types = {
       goal: {
         text: 'has reached the goal',
@@ -145,7 +181,7 @@ module.exports = () => {
     ]);
   });
 
-  minecraft.on(events.MC_PLAYER_LEFT, async ({ username }) => {
+  minecraft.on(EVENTS.MC_PLAYER_LEFT, async ({ username }) => {
     const avatar = getPlayerAvatarUrl(username, 24);
 
     await discordNotificationSender.sendGenericEmbedMessage([
@@ -159,7 +195,7 @@ module.exports = () => {
     ]);
   });
 
-  discordChatReceiver.on(events.DISCORD_USER_CHAT, async ({ username, message }) => {
+  discordChatReceiver.on(EVENTS.DISCORD_USER_CHAT, async ({ username, message }) => {
     await rcon.sendMessage(username, message);
   });
 
@@ -172,5 +208,6 @@ module.exports = () => {
   }
 
   rcon.connect();
+
   discordChatReceiver.login();
 };
