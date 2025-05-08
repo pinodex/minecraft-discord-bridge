@@ -1,3 +1,4 @@
+
 const { createLogger, transports, format } = require('winston');
 
 let instance = null;
@@ -7,6 +8,7 @@ let instance = null;
  *
  * @return {Logger}
  */
+/** @deprecated init() is now deprecated. Please use logger inside /lib instead */
 exports.init = () => {
   instance = createLogger({
     level: 'debug',
@@ -22,6 +24,7 @@ exports.init = () => {
  *
  * @return {Logger}
  */
+/** @deprecated getInstance() is now deprecated. Please use logger inside /lib instead */
 exports.getInstance = () => instance;
 
 /**
@@ -30,6 +33,7 @@ exports.getInstance = () => instance;
  * @param  {String} message Log message
  * @return {Logger}
  */
+/** @deprecated log() is now deprecated. Please use logger inside /lib instead */
 exports.log = (message) => instance.log(message);
 
 /**
@@ -38,6 +42,7 @@ exports.log = (message) => instance.log(message);
  * @param  {String} message Log message
  * @return {Logger}
  */
+/** @deprecated info() is now deprecated. Please use logger inside /lib instead */
 exports.info = (message) => instance.info(message);
 
 /**
@@ -46,6 +51,7 @@ exports.info = (message) => instance.info(message);
  * @param  {String} message Log message
  * @return {Logger}
  */
+/** @deprecated error() is now deprecated. Please use logger inside /lib instead */
 exports.error = (message) => instance.error(message);
 
 /**
@@ -54,6 +60,7 @@ exports.error = (message) => instance.error(message);
  * @param  {String} message
  * @return {Logger}
  */
+/** @deprecated warn() is now deprecated. Please use logger inside /lib instead */
 exports.warn = (message) => instance.warn(message);
 
 /**
@@ -62,4 +69,5 @@ exports.warn = (message) => instance.warn(message);
  * @param  {String} message
  * @return {Logger}
  */
+/** @deprecated debug() is now deprecated. Please use logger inside /lib instead */
 exports.debug = (message) => instance.debug(message);
