@@ -1,8 +1,8 @@
 const events = require('./events');
-const serverKeys = require("./serverKeys");
+const serverIds = require("./serverIds");
 
 module.exports = {
   EVENTS: events,
-  SERVER_KEYS: serverKeys,
-  SERVER_KEYS_ARR: Object.keys(serverKeys).map(key => serverKeys[key])
+  SERVER_IDS: serverIds,
+  SERVER_IDS_ARR: Object.keys(serverIds).map(key => serverIds[key])
 };

@@ -1,19 +1,20 @@
 const EventEmitter = require('events');
 const { Tail } = require('tail');
-const logger = require('../logger');
 const RULES = require('../rules');
+const { getLoggerInstance } = require("../lib/logger");
 
 /**
  * MinecraftLogListener
  */
 class MinecraftLogListener extends EventEmitter {
-  key;
+  id;
   name;
+  logger;
 
   /**
    * @typedef MinecraftLogListenerOptions
    * @property {string=} name Minecraft Server Name
-   * @property {string} key Minecraft Server Unique Key Identifier
+   * @property {string} id Minecraft Server Unique Identifier
    */
 
   /**
@@ -24,10 +25,11 @@ class MinecraftLogListener extends EventEmitter {
   constructor(logFile, options) {
     super();
 
-    const { name = 'Minecraft Server', key } = options;
+    const { name = 'Minecraft Server', id } = options;
 
-    this.key = key;
+    this.id = id;
     this.name = name;
+    this.logger = getLoggerInstance(id);
 
     this.tail = new Tail(logFile, {
       useWatchFile: true,
@@ -38,10 +40,10 @@ class MinecraftLogListener extends EventEmitter {
 
     this.tail.on('line', this.handleLine.bind(this));
     this.tail.on('error', (err) => {
-      logger.error(`[ERROR] [${this.key}] ${err}`);
+      this.logger.error(err);
     });
 
-    logger.info(`[${this.key}] Listening to log file ${logFile}`);
+    this.logger.info(`Listening to log file ${logFile}`);
   }
 
   /**
@@ -54,14 +56,14 @@ class MinecraftLogListener extends EventEmitter {
       return;
     }
 
-    logger.debug(`[${this.key}] Log line: ${line}`);
+    this.logger.debug(`Log line: ${line}`);
 
     let matches = null;
 
-    const matchRules = RULES?.[this.key];
+    const matchRules = RULES?.[this.id];
 
     if (!matchRules) {
-      logger.error(`[ERROR] [${this.key}] Can't find match rules`);
+      this.logger.error(`Can't find match rules`);
       return;
     }
 
@@ -78,7 +80,7 @@ class MinecraftLogListener extends EventEmitter {
     const data = rule.handler(matches);
 
     if (data) {
-      logger.debug(`[${this.key}] Minecraft Event [${rule.type}]: ${JSON.stringify(data)}`);
+      this.logger.debug(`Minecraft Event [${rule.type}]: ${JSON.stringify(data)}`);
 
       this.emit(rule.type, data);
     }

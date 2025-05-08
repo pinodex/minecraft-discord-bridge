@@ -1,16 +1,21 @@
 const { Rcon } = require('rcon-client');
 const { timeout } = require('../utils');
-const logger = require('../logger');
+const {getLoggerInstance} = require("../lib/logger");
 
 class RconWrapper {
+  logger;
+
   /**
    * Constructs RconWrapper
    *
-   * @param  {String} host     RCON Host
-   * @param  {Number} port     RCON Port
-   * @param  {String} password RCON Password
+   * @param  {string} id       Server ID
+   * @param  {string} host     RCON Host
+   * @param  {number} port     RCON Port
+   * @param  {string} password RCON Password
    */
-  constructor(host, port, password) {
+  constructor(id, host, port, password) {
+    this.logger = getLoggerInstance(id);
+
     this.connected = false;
 
     this.client = new Rcon({ host, port, password });
@@ -35,11 +40,11 @@ class RconWrapper {
    */
   async connect() {
     try {
-      logger.info('Connecting to RCON');
+      this.logger.info('Connecting to RCON');
 
       await this.client.connect();
 
-      logger.info('Connected to RCON');
+      this.logger.info('Connected to RCON');
     } catch (e) {
       await this.retryConnection();
     }
@@ -61,14 +66,14 @@ class RconWrapper {
    */
   async sendMessage(username, message) {
     if (!this.connected) {
-      logger.info('RCON not connected. Cannot send message');
+      this.logger.info('RCON not connected. Cannot send message');
 
       return null;
     }
 
     await this.client.send(`tellraw @a "§9<${username}>§f ${message}"`);
 
-    logger.info(`Sending RCON message from ${username}: ${message}`);
+    this.logger.info(`Sending RCON message from ${username}: ${message}`);
 
     return true;
   }
@@ -81,7 +86,7 @@ class RconWrapper {
    */
   async sendCommand(command) {
     if (!this.connected) {
-      logger.info('RCON not connected. Cannot send message');
+      this.logger.info('RCON not connected. Cannot send message');
 
       return null;
     }

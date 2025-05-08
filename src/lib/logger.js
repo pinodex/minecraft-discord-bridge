@@ -1,5 +1,5 @@
 const { createLogger, transports, format, addColors } = require('winston');
-const {SERVER_KEYS_ARR} = require("../constants");
+const {SERVER_IDS_ARR} = require("../constants");
 
 const colorizer = format.colorize();
 
@@ -22,14 +22,14 @@ const init = () => {
   }
 
   console.log("Initialize Logger Instances")
-  SERVER_KEYS_ARR.forEach(key => {
-    const instance = instances.get(key);
+  SERVER_IDS_ARR.forEach(id => {
+    const instance = instances.get(id);
 
     if (!instance) {
       const logger = createLogger({
         level: "debug",
         format: format.combine(
-          format.label({ label: key }), // <-- Add your prefix here
+          format.label({ label: id }), // <-- Add your prefix here
           format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), // Optional
           format.printf(({ level, message, label, timestamp }) => {
             const coloredLevel = colorizer.colorize(level, `[${level.toUpperCase()}]`);
@@ -42,7 +42,7 @@ const init = () => {
         transports: [new transports.Console()],
       })
 
-      instances.set(key, logger);
+      instances.set(id, logger);
     }
   })
   isInitialized = true
@@ -59,18 +59,18 @@ const init = () => {
 
 /**
  * Get Logger Instance
- * @param {string} key
+ * @param {string} id
  * @return {LoggerInstance}
  */
-const getLoggerInstance = (key) => {
+const getLoggerInstance = (id) => {
   if (!isInitialized) {
-    throw new Error(`Logger key '${key}' is not initialized!`);
+    throw new Error(`Logger key '${id}' is not initialized!`);
   }
 
-  const instance = instances.get(key);
+  const instance = instances.get(id);
 
   if (!instance) {
-    throw new Error(`Can't find logger instance '${key}'`);
+    throw new Error(`Can't find logger instance '${id}'`);
   }
 
   return {
