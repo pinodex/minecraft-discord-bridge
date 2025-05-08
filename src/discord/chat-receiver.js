@@ -1,27 +1,28 @@
 const EventEmitter = require('events');
 const { Client, Intents } = require('discord.js');
-const logger = require('../logger');
 const { EVENTS} = require('../constants');
+const { getLoggerInstance } = require("../lib/logger");
 
 const commands = [
   {
-    name: 'playerlist-cobblemon',
-    description: 'Returns the current player list in Cobblemon Server.',
-  },
-  {
-    name: 'playerlist-smp',
-    description: 'Returns the current player list in SMP Server.',
-  },
+    name: 'playerlist',
+    description: 'Returns the current player list in Minecraft Server.',
+  }
 ];
 
 class DiscordChatReceiver extends EventEmitter {
+  logger;
+
   /**
    * Constructs DiscordWebhookChatReceiver
+   * @param  {string} serverId  Minecraft Server ID
    * @param  {String} token     Discord App Token
    * @param  {String} channelId Discord Channel ID
    */
-  constructor(token, channelId) {
+  constructor(serverId, token, channelId) {
     super();
+
+    this.logger = getLoggerInstance(serverId);
 
     this.client = new Client({
       intents: [
@@ -53,14 +54,14 @@ class DiscordChatReceiver extends EventEmitter {
    * Login to Discord
    */
   async login() {
-    logger.debug('Logging in to Discord API');
+    this.logger.debug('Logging in to Discord API');
 
     try {
       await this.client.login(this.token);
 
-      logger.info('Logged in to Discord API');
+      this.logger.info('Logged in to Discord API');
     } catch (e) {
-      logger.error(`Cannot login to Discord API: ${e}`);
+      this.logger.error(`Cannot login to Discord API: ${e}`);
     }
   }
 
@@ -68,14 +69,14 @@ class DiscordChatReceiver extends EventEmitter {
    * Discord.js Client Ready Event Handler
    */
   async onClientReady(client) {
-    logger.info(`Discord Client Ready. App ID: ${client.application.id}`);
+    this.logger.info(`Discord Client Ready. App ID: ${client.application.id}`);
 
     this.emit(EVENTS.DISCORD_CLIENT_READY, client);
 
     const channel = await this.fetchChannel();
 
     if (channel.type !== 'GUILD_TEXT') {
-      logger.error('Invalid Discord chat receiver channel type');
+      this.logger.error('Invalid Discord chat receiver channel type');
 
       return;
     }
@@ -130,15 +131,16 @@ class DiscordChatReceiver extends EventEmitter {
    * @return {Discord.ApplicationCommandManager}
    */
   async registerCommands(guildId) {
-    logger.debug('Registering commands');
+    this.logger.debug('Registering commands');
 
     const guild = await this.client.guilds.fetch(guildId);
 
-    const createdCommands = await Promise.all(
-      commands.map((command) => guild.commands.create(command)),
-    );
+    // This will remove all the existing commands
+    const createdCommands = await guild.commands.set(commands);
 
-    logger.info(`Registered ${createdCommands.length} commands`);
+    const listOfCommands = createdCommands.map((command) => `/${command.name}`);
+
+    this.logger.info(`Registered ${listOfCommands.length} commands: ${listOfCommands}`);
   }
 
   /**
@@ -147,16 +149,16 @@ class DiscordChatReceiver extends EventEmitter {
    * @return {Discord.GuildChannel}
    */
   async fetchChannel() {
-    logger.debug(`Fetching Discord Channel ID ${this.channelId}`);
+    this.logger.debug(`Fetching Discord Channel ID ${this.channelId}`);
 
     try {
       const channel = await this.client.channels.fetch(this.channelId);
 
-      logger.info(`Fetched Discord Channel. Channel ID: ${channel.id}`);
+      this.logger.info(`Fetched Discord Channel. Channel ID: ${channel.id}`);
 
       return channel;
     } catch (e) {
-      logger.error(`Cannot fetch Discord Channel: ${e}`);
+      this.logger.error(`Cannot fetch Discord Channel: ${e}`);
     }
 
     return null;

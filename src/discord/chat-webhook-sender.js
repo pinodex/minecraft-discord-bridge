@@ -1,5 +1,5 @@
 const { WebhookClient } = require('discord.js');
-const logger = require('../logger');
+const { getLoggerInstance } = require("../lib/logger");
 
 const DEFAULT_AVATARURL = 'https://cdn.discordapp.com/avatars/873436090982346823/2e293c07de6988d50b285ebf0ff10fab.png?size=128';
 
@@ -9,11 +9,15 @@ const DEFAULT_AVATARURL = 'https://cdn.discordapp.com/avatars/873436090982346823
  * Allows sending of messages to a Discord Channel via Webhook
  */
 class DiscordWebhookChatSender {
+  logger;
+
   /**
    * Constructs DiscordWebhookChatSender
-   * @param  {String} url Discord Webhook URL
+   * @param {string} serverId Minecraft Server Id
+   * @param  {string} url Discord Webhook URL
    */
-  constructor(url) {
+  constructor(serverId, url) {
+    this.logger = getLoggerInstance(serverId);
     this.client = new WebhookClient({ url });
   }
 
@@ -24,7 +28,7 @@ class DiscordWebhookChatSender {
       content: message,
     };
 
-    logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
+    this.logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
 
     await this.client.send(payload);
   }
@@ -36,7 +40,7 @@ class DiscordWebhookChatSender {
       content: message,
     };
 
-    logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
+    this.logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
 
     await this.client.send(payload);
   }
@@ -48,7 +52,7 @@ class DiscordWebhookChatSender {
       embeds,
     };
 
-    logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
+    this.logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
 
     await this.client.send(payload);
   }
@@ -60,7 +64,7 @@ class DiscordWebhookChatSender {
       embeds,
     };
 
-    logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
+    this.logger.debug(`Sending Discord Webhook Message: ${JSON.stringify(payload)}`);
 
     await this.client.send(payload);
   }
