@@ -51,7 +51,8 @@ const DiscordChatReceiver = require('./discord/chat-receiver');
 const bridge = (config) => {
   const minecraft = new MinecraftLogListener(config.logFile, {
     id: config.id,
-    name: config.name
+    name: config.name,
+    rules: config.rules,
   });
 
   const rcon = new RconWrapper(config.id, config.rcon.host, config.rcon.port, config.rcon.password);
