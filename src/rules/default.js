@@ -1,8 +1,15 @@
 const { EVENTS } = require('../constants')
 
 /**
+ * @typedef Rule
+ * @property {string} type
+ * @property {RegExp} pattern
+ * @property {(matches: string[]) => any}
+ */
+
+/**
  * List of match rules
- * @type {Array}
+ * @type {Rule[]}
  */
 module.exports = [
   {

@@ -1,5 +1,0 @@
-module.exports = {
-  LHGSMP3: "LHGSMP3",
-  FANTASY: "FANTASY",
-  PERFECTED: "PERFECTED"
-}

@@ -1,5 +1,6 @@
 const { createLogger, transports, format, addColors } = require('winston');
 const {SERVER_IDS_ARR} = require("../constants");
+const {getServerIds} = require("../util/getServerIds");
 
 const colorizer = format.colorize();
 
@@ -22,7 +23,10 @@ const init = () => {
   }
 
   console.log("Initialize Logger Instances")
-  SERVER_IDS_ARR.forEach(id => {
+
+  const serverIds = getServerIds();
+
+  serverIds.forEach(id => {
     const instance = instances.get(id);
 
     if (!instance) {

@@ -10,7 +10,7 @@ const DiscordChatReceiver = require('./discord/chat-receiver');
 /**
  * @typedef BridgeConfigRCON
  * @property {string} host
- * @property {string} port
+ * @property {number} port
  * @property {string} password
  */
 
@@ -41,6 +41,7 @@ const DiscordChatReceiver = require('./discord/chat-receiver');
  * @property {string} host
  * @property {BridgeConfigRCON} rcon
  * @property {BridgeConfigDiscord} discord
+ * @property {Rule[]} rules
  */
 
 /**

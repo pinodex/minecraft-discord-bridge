@@ -1,6 +1,5 @@
 const EventEmitter = require('events');
 const { Tail } = require('tail');
-const RULES = require('../rules');
 const { getLoggerInstance } = require("../lib/logger");
 
 /**
@@ -10,11 +9,13 @@ class MinecraftLogListener extends EventEmitter {
   id;
   name;
   logger;
+  rules;
 
   /**
    * @typedef MinecraftLogListenerOptions
    * @property {string=} name Minecraft Server Name
    * @property {string} id Minecraft Server Unique Identifier
+   * @property {any[]} rules
    */
 
   /**
@@ -29,6 +30,7 @@ class MinecraftLogListener extends EventEmitter {
 
     this.id = id;
     this.name = name;
+    this.rules = options.rules;
     this.logger = getLoggerInstance(id);
 
     this.tail = new Tail(logFile, {
@@ -60,14 +62,7 @@ class MinecraftLogListener extends EventEmitter {
 
     let matches = null;
 
-    const matchRules = RULES?.[this.id];
-
-    if (!matchRules) {
-      this.logger.error(`Can't find match rules`);
-      return;
-    }
-
-    const rule = matchRules.find(({ pattern }) => {
+    const rule = this.rules.find(({ pattern }) => {
       matches = line.match(pattern);
 
       return matches;
