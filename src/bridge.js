@@ -95,7 +95,7 @@ const bridge = (config) => {
         description: 'You can now connect to Minecraft Server',
         color: 5763719,
         footer: {
-          text: `IP: ${MINECRAFT_HOST}`,
+          text: `IP: ${config.host}`,
         },
       },
     ]);
