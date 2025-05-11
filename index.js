@@ -49,7 +49,7 @@ if (discordHousekeeping) {
       logFile: process.env[`SERVER_${id}_MINECRAFT_LOG_FILE`],
       rcon: {
         host: process.env[`SERVER_${id}_MINECRAFT_RCON_HOST`],
-        port: parseInt(process.env[`SERVER_'${id}_MINECRAFT_RCON_PORT`] || '0'),
+        port: parseInt(process.env[`SERVER_${id}_MINECRAFT_RCON_PORT`] || '0'),
         password: process.env[`SERVER_${id}_MINECRAFT_RCON_PASSWORD`],
       },
       discord: {
