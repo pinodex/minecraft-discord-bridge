@@ -82,7 +82,7 @@ class RconWrapper {
    * Send generic command and get response
    *
    * @param  {String} command Command
-   * @return {String}
+   * @return {Promise<String>}
    */
   async sendCommand(command) {
     if (!this.connected) {
