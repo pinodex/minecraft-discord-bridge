@@ -228,6 +228,7 @@ const bridge = (config) => {
   discordChatReceiver.login();
 
   if (config.discord.category?.main) {
+    consoe.log("START MONITOR")
     serverStatusMonitor.start();
   }
 };
