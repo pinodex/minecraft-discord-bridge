@@ -17,7 +17,7 @@ class MinecraftStatusMonitor {
    * @param {number=} [options.port] - Port of the Minecraft server (optional if SRV is configured).
    * @param {number} [options.intervalMs=300000] - Interval to check server status (default 5 minutes).
    */
-  constructor({ serverId, token, channelId, host, port, intervalMs = 5 * 60 * 1000 }) {
+  constructor({ serverId, token, channelId, host, port, intervalMs = 60 * 1000 }) {
     this.logger = getLoggerInstance(serverId);
 
     this.discordToken = token;
@@ -26,7 +26,11 @@ class MinecraftStatusMonitor {
     this.port = port;
     this.intervalMs = intervalMs;
 
-    this.client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+    this.client = new Client({
+      intents: [
+        Intents.FLAGS.GUILDS
+      ]
+    });
     this.channel = null;
   }
 
@@ -36,9 +40,12 @@ class MinecraftStatusMonitor {
   async start() {
     this.client.once('ready', async () => {
       this.logger.info(`✅ Logged in as ${this.client.user.tag}`);
-      this.channel = await this.client.channels.fetch(this.channelId);
-      if (!this.channel?.isTextBased()) {
-        this.logger.error('❌ Channel is not a text channel or could not be found.');
+
+      this.channel = await this.fetchChannel();
+
+      if (this.channel.type !== 'GUILD_TEXT') {
+        this.logger.error('Invalid Discord status channel type');
+
         return;
       }
 
@@ -94,6 +101,27 @@ class MinecraftStatusMonitor {
       await this.channel.setName(newName);
       this.logger.info(`#️⃣ Channel renamed to: ${newName}`);
     }
+  }
+
+  /**
+   * Fetch the specified Discord Channel ID
+   *
+   * @return {Discord.GuildChannel}
+   */
+  async fetchChannel() {
+    this.logger.debug(`Fetching Discord Status Channel ID ${this.channelId}`);
+
+    try {
+      const channel = await this.client.channels.fetch(this.channelId);
+
+      this.logger.info(`Fetched Discord Status Channel. Channel ID: ${channel.id}`);
+
+      return channel;
+    } catch (e) {
+      this.logger.error(`Cannot fetch Discord Status Channel: ${e}`);
+    }
+
+    return null;
   }
 }
 
