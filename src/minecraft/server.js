@@ -123,7 +123,7 @@ class MinecraftStatusMonitor {
 
     console.log(this.category.name, "newName", newName, online, players.online)
 
-    await this.category.setName(newName);
+    await this.category.setName(`${online} - ${players.online}`);
   }
 
   /**
