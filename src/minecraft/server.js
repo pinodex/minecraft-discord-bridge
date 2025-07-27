@@ -40,17 +40,17 @@ class MinecraftStatusMonitor {
    */
   async start() {
     this.client.once('ready', async () => {
+      this.logger.info(`Starting Server Status Monitoring...`);
+
       this.logger.info(`✅ Logged in as ${this.client.user.tag}`);
 
       this.category = await this.fetchCategory();
 
       if (!this.category || this.category.type !== "GUILD_CATEGORY") {
-        this.logger.error('Not a valid category channel.');
+        this.logger.error('Not a valid category channel. Category ID:', this.categoryId);
 
         return;
       }
-
-      this.logger.info(`Valid Category channel ${this.category.id}`);
 
       await this.checkAndUpdate();
 
@@ -58,6 +58,8 @@ class MinecraftStatusMonitor {
       cron.schedule(this.cronExpression, async () => {
         await this.checkAndUpdate();
       });
+
+      this.logger.info(`Server Status Monitoring is now running`);
     });
 
     this.client.login(this.discordToken);
