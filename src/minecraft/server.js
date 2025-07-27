@@ -119,7 +119,7 @@ class MinecraftStatusMonitor {
 
     const playerCountLabel = onlinePlayers <= 0 && maxPlayers <= 0 ? '' : `(${onlinePlayers}/${maxPlayers})`
 
-    const newName = `${icon} ${baseName} ${playerCountLabel}`.trim();
+    const newName = `${icon.trim()} ${baseName.trim()} ${playerCountLabel.trim()}`.trim()
 
     // console.log("newName", newName, online, players.online)
 
