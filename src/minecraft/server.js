@@ -89,7 +89,7 @@ class MinecraftStatusMonitor {
       const hosts = this.hosts.split(",");
 
       const results = await Promise.all(hosts.map(async (host) => mcs.statusJava(host, this.port, { query: true })));
-      this.logger.debug("RESULTS", results.map(({ online }) => online));
+
       const onlineHost = results.find((result) => result.online);
 
       if (!onlineHost) return results?.[0];
@@ -114,6 +114,8 @@ class MinecraftStatusMonitor {
     const playerCountLabel = onlinePlayers <= 0 && maxPlayers <= 0 ? '' : `(${onlinePlayers}/${maxPlayers})`
 
     const newName = `${icon} ${baseName} ${playerCountLabel}`.trim();
+
+    console.log("newName", newName, online, players.online)
 
     if (this.category.name === newName) return;
 
