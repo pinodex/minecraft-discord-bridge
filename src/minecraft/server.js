@@ -111,7 +111,9 @@ class MinecraftStatusMonitor {
    * @param {{ online: boolean, players: { max: number, online: number }}} result
    */
   async updateCategoryName({ online, players }) {
-    let baseName = this.category.name.replace(/^([🟢🔴])\s*/, '').replace(/\s*\(\d+\/\d+\)/, '');
+    const category = await this.fetchCategory();
+
+    let baseName = category.name.replace(/^([🟢🔴])\s*/, '').replace(/\s*\(\d+\/\d+\)/, '');
 
     const icon = online ? '🟢' : '🔴';
     const onlinePlayers = players?.online ?? 0;
@@ -123,7 +125,7 @@ class MinecraftStatusMonitor {
 
     console.log(this.category.name, "newName", newName, online, players.online)
 
-    await this.category.setName(`${online} - ${players.online}`);
+    await category.setName(`${online} - ${players.online}`);
   }
 
   /**
