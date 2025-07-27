@@ -121,7 +121,9 @@ class MinecraftStatusMonitor {
 
     const newName = `${icon} ${baseName} ${playerCountLabel}`.trim();
 
-    console.log("newName", newName, online, players.online)
+    // console.log("newName", newName, online, players.online)
+
+    if (this.category.name === newName) return;
 
     await this.category.setName(newName);
     this.logger.info(`✅ Category renamed to: ${newName}`);
@@ -136,7 +138,7 @@ class MinecraftStatusMonitor {
     this.logger.debug(`Fetching Discord Category Channel ID ${this.categoryId}`);
 
     try {
-      const category = await this.client.channels.fetch(this.categoryId, { force: true });
+      const category = await this.client.channels.fetch(this.categoryId);
 
       this.logger.info(`Fetched Discord Category Channel. Category ID: ${category.id}`);
 
