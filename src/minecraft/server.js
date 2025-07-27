@@ -128,6 +128,8 @@ class MinecraftStatusMonitor {
       return;
     }
 
+    console.log("NEW NAME", this.category.name, " | ",newName)
+
     await this.category.setName(newName);
     this.logger.info(`✅ Category renamed to: ${newName}`);
   }
