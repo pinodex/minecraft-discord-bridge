@@ -91,8 +91,6 @@ class MinecraftStatusMonitor {
    * @param {boolean} isOnline
    */
   async updateCategoryName(isOnline) {
-    if (!this.category) return;
-
     const baseName = this.category.name.replace(/^([🟢🔴])\s*/, '');
     const icon = isOnline ? '🟢' : '🔴';
     const newName = `${icon} ${baseName}`;
