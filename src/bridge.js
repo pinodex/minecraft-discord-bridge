@@ -6,6 +6,7 @@ const RconWrapper = require('./minecraft/rcon-wrapper');
 
 const DiscordWebhookChatSender = require('./discord/chat-webhook-sender');
 const DiscordChatReceiver = require('./discord/chat-receiver');
+const MinecraftStatusMonitor = require("./minecraft/server");
 
 /**
  * @typedef BridgeConfigRCON
@@ -24,6 +25,7 @@ const DiscordChatReceiver = require('./discord/chat-receiver');
 /**
  * @typedef BridgeConfigDiscordChannelId
  * @property {string} chat
+ * @property {string=} status
  */
 
 /**
@@ -198,6 +200,17 @@ const bridge = (config) => {
   rcon.connect();
 
   discordChatReceiver.login();
+
+  if (config.discord.channels?.status) {
+    const serverStatusMonitor = new MinecraftStatusMonitor({
+      channelId: config.discord.channels.status,
+      host: config.host,
+      token: config.discord.token,
+      intervalMs: 60 * 1000
+    })
+
+    serverStatusMonitor.start();
+  }
 };
 
 module.exports = bridge
