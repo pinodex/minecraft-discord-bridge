@@ -206,7 +206,8 @@ const bridge = (config) => {
       channelId: config.discord.channels.status,
       host: config.host,
       token: config.discord.token,
-      intervalMs: 60 * 1000
+      intervalMs: 60 * 1000,
+      serverId: config.id
     })
 
     serverStatusMonitor.start();

@@ -10,7 +10,7 @@ class MinecraftStatusMonitor {
 
   /**
    * @param {Object} options
-   * @param {string} serverId  Minecraft Server ID
+   * @param {string} options.serverId  Minecraft Server ID
    * @param {string} options.token - Discord bot token.
    * @param {string} options.channelId - ID of the Discord text channel to update.
    * @param {string} options.host - Domain or IP of the Minecraft server.
