@@ -25,13 +25,18 @@ const MinecraftStatusMonitor = require("./minecraft/server");
 /**
  * @typedef BridgeConfigDiscordChannelId
  * @property {string} chat
- * @property {string=} status
+ */
+
+/**
+ * @typedef BridgeConfigDiscordCategoryId
+ * @property {string} main
  */
 
 /**
  * @typedef BridgeConfigDiscord
  * @property {string} token
  * @property {BridgeConfigDiscordChannelId} channels
+ * @property {BridgeConfigDiscordCategoryId} category
  * @property {BridgeConfigDiscordWebhookUrl} webhooks
  */
 
@@ -201,9 +206,9 @@ const bridge = (config) => {
 
   discordChatReceiver.login();
 
-  if (config.discord.channels?.status) {
+  if (config.discord.category?.main) {
     const serverStatusMonitor = new MinecraftStatusMonitor({
-      channelId: config.discord.channels.status,
+      categoryId: config.discord.category.main,
       host: config.host,
       token: config.discord.token,
       intervalMs: 60 * 1000,

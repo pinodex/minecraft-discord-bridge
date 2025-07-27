@@ -12,16 +12,16 @@ class MinecraftStatusMonitor {
    * @param {Object} options
    * @param {string} options.serverId  Minecraft Server ID
    * @param {string} options.token - Discord bot token.
-   * @param {string} options.channelId - ID of the Discord text channel to update.
+   * @param {string} options.categoryId - ID of the Discord category to update.
    * @param {string} options.host - Domain or IP of the Minecraft server.
    * @param {number=} [options.port] - Port of the Minecraft server (optional if SRV is configured).
    * @param {number} [options.intervalMs=300000] - Interval to check server status (default 5 minutes).
    */
-  constructor({ serverId, token, channelId, host, port, intervalMs = 60 * 1000 }) {
+  constructor({ serverId, token, categoryId, host, port, intervalMs = 60 * 1000 }) {
     this.logger = getLoggerInstance(serverId);
 
     this.discordToken = token;
-    this.channelId = channelId;
+    this.categoryId = categoryId;
     this.host = host;
     this.port = port;
     this.intervalMs = intervalMs;
@@ -31,7 +31,7 @@ class MinecraftStatusMonitor {
         Intents.FLAGS.GUILDS
       ]
     });
-    this.channel = null;
+    this.category = null;
   }
 
   /**
@@ -41,10 +41,10 @@ class MinecraftStatusMonitor {
     this.client.once('ready', async () => {
       this.logger.info(`✅ Logged in as ${this.client.user.tag}`);
 
-      this.channel = await this.fetchChannel();
+      this.category = await this.fetchCategory();
 
-      if (this.channel.type !== 'GUILD_TEXT') {
-        this.logger.error('Invalid Discord status channel type');
+      if (!this.category || this.category.type !== 4) {
+        this.logger.error('Not a valid category channel.');
 
         return;
       }
@@ -60,12 +60,12 @@ class MinecraftStatusMonitor {
   }
 
   /**
-   * Checks Minecraft server status and updates Discord channel name.
+   * Checks Minecraft server status and updates Discord category name.
    */
   async checkAndUpdate() {
     try {
       const isOnline = await this.pingServer();
-      await this.updateChannelName(isOnline);
+      await this.updateCategoryName(isOnline);
     } catch (err) {
       this.logger.error('❌ Failed to check/update status:', err);
     }
@@ -87,38 +87,41 @@ class MinecraftStatusMonitor {
   }
 
   /**
-   * Updates the channel name with the server's status.
+   * Updates the category name with the server's status.
    * @param {boolean} isOnline
    */
-  async updateChannelName(isOnline) {
-    if (!this.channel) return;
+  async updateCategoryName(isOnline) {
+    if (!this.category) return;
 
-    const baseName = this.channel.name.replace(/^([🟢🔴])\s*/, ''); // remove old icon if exists
+    const baseName = this.category.name.replace(/^([🟢🔴])\s*/, '');
     const icon = isOnline ? '🟢' : '🔴';
-    const newName = `${baseName}${icon}`;
+    const newName = `${icon} ${baseName}`;
 
-    if (this.channel.name !== newName) {
-      await this.channel.setName(newName);
-      this.logger.info(`#️⃣ Channel renamed to: ${newName}`);
+    if (this.category.name === newName) {
+      console.log('✅ Category name already correct.');
+      return;
     }
+
+    await this.category.setName(newName);
+    console.log(`✅ Category renamed to: ${newName}`);
   }
 
   /**
-   * Fetch the specified Discord Channel ID
+   * Fetch the specified Discord Category ID
    *
-   * @return {Discord.GuildChannel}
+   * @return {Discord.GuildCategory}
    */
-  async fetchChannel() {
-    this.logger.debug(`Fetching Discord Status Channel ID ${this.channelId}`);
+  async fetchCategory() {
+    this.logger.debug(`Fetching Discord Category Channel ID ${this.categoryId}`);
 
     try {
-      const channel = await this.client.channels.fetch(this.channelId);
+      const category = await this.client.channels.fetch(this.categoryId);
 
-      this.logger.info(`Fetched Discord Status Channel. Channel ID: ${channel.id}`);
+      this.logger.info(`Fetched Discord Category Channel. Category ID: ${category.id}`);
 
       return channel;
     } catch (e) {
-      this.logger.error(`Cannot fetch Discord Status Channel: ${e}`);
+      this.logger.error(`Cannot fetch Discord Category Channel: ${e}`);
     }
 
     return null;

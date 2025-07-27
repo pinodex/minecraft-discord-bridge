@@ -56,7 +56,9 @@ if (discordHousekeeping) {
         token: process.env[`SERVER_${id}_DISCORD_BRIDGE_TOKEN`],
         channels: {
           chat: process.env[`SERVER_${id}_DISCORD_CHAT_CHANNEL_ID`],
-          status: process.env[`SERVER_${id}_DISCORD_STATUS_CHANNEL_ID`],
+        },
+        category: {
+          main: process.env[`SERVER_${id}_DISCORD_MAIN_CATEGORY_ID`],
         },
         webhooks: {
           chat: process.env[`SERVER_${id}_DISCORD_CHAT_WEBHOOK_URL`],
