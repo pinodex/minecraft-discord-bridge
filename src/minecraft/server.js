@@ -98,12 +98,12 @@ class MinecraftStatusMonitor {
     const newName = `${icon} ${baseName}`;
 
     if (this.category.name === newName) {
-      console.log('✅ Category name already correct.');
+      this.logger.info('✅ Category name already correct.');
       return;
     }
 
     await this.category.setName(newName);
-    console.log(`✅ Category renamed to: ${newName}`);
+    this.logger.info(`✅ Category renamed to: ${newName}`);
   }
 
   /**
