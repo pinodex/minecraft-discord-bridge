@@ -43,7 +43,7 @@ class MinecraftStatusMonitor {
 
       this.category = await this.fetchCategory();
 
-      if (!this.category || this.category.type !== 4) {
+      if (!this.category || this.category.type !== "GUILD_CATEGORY") {
         this.logger.error('Not a valid category channel.');
 
         return;
