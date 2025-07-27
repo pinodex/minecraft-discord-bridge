@@ -89,7 +89,7 @@ class MinecraftStatusMonitor {
       const hosts = this.hosts.split(",");
 
       const results = await Promise.all(hosts.map(async (host) => mcs.statusJava(host, this.port, { query: true })));
-      this.logger.debug("RESULTS", results)
+      this.logger.debug("RESULTS", results.map(({ online }) => online));
       const onlineHost = results.find((result) => result.online);
 
       if (!onlineHost) return results?.[0];
