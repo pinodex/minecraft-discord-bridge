@@ -65,6 +65,14 @@ const bridge = (config) => {
 
   const rcon = new RconWrapper(config.id, config.rcon.host, config.rcon.port, config.rcon.password);
 
+  const serverStatusMonitor = new MinecraftStatusMonitor({
+    categoryId: config.discord.category.main,
+    token: config.discord.token,
+    intervalMs: 60 * 1000,
+    serverId: config.id,
+    port: config.port
+  })
+
   const discordNotificationSender = new DiscordWebhookChatSender(
     config.id,
     config.discord.webhooks.notifications,
@@ -150,6 +158,10 @@ const bridge = (config) => {
         },
       },
     ]);
+
+    if (config.discord.category?.main) {
+      await serverStatusMonitor.checkAndUpdate();
+    }
   });
 
   minecraft.on(EVENTS.MC_PLAYER_ADVANCEMENT, async ({ username, advancement, type }) => {
@@ -191,6 +203,10 @@ const bridge = (config) => {
         },
       },
     ]);
+
+    if (config.discord.category?.main) {
+      await serverStatusMonitor.checkAndUpdate();
+    }
   });
 
   discordChatReceiver.on(EVENTS.DISCORD_USER_CHAT, async ({ username, message }) => {
@@ -208,14 +224,6 @@ const bridge = (config) => {
   discordChatReceiver.login();
 
   if (config.discord.category?.main) {
-    const serverStatusMonitor = new MinecraftStatusMonitor({
-      categoryId: config.discord.category.main,
-      token: config.discord.token,
-      intervalMs: 60 * 1000,
-      serverId: config.id,
-      port: config.port
-    })
-
     serverStatusMonitor.start();
   }
 };
