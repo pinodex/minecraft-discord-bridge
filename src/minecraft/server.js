@@ -80,7 +80,7 @@ class MinecraftStatusMonitor {
 
   /**
    * Pings the Minecraft server.
-   * @returns {Promise<JavaStatusResponse | { online: false }>}
+   * @returns {{ online: boolean, players?: { max: number, online: number }}}
    */
   async pingServer() {
     try {
@@ -92,9 +92,15 @@ class MinecraftStatusMonitor {
 
       const onlineHost = results.find((result) => result.online);
 
-      if (!onlineHost) return results?.[0];
+      if (!onlineHost) return {
+        online: results?.[0]?.online ?? false,
+        players: results?.[0]?.players
+      };
 
-      return onlineHost;
+      return {
+        online: onlineHost?.online ?? false,
+        players: onlineHost?.players
+      };
     } catch (error) {
       return { online: false };
     }
@@ -102,7 +108,7 @@ class MinecraftStatusMonitor {
 
   /**
    * Updates the category name with the server's status.
-   * @param {JavaStatusResponse | { online: false }} result
+   * @param {{ online: boolean, players: { max: number, online: number }}} result
    */
   async updateCategoryName({ online, players }) {
     let baseName = this.category.name.replace(/^([🟢🔴])\s*/, '').replace(/\s*\(\d+\/\d+\)/, '');
@@ -142,6 +148,21 @@ class MinecraftStatusMonitor {
     }
 
     return null;
+  }
+
+  static parsePlayerListResponse(str) {
+    const match = str.match(/There are (\d+) of a max of (\d+)/);
+
+    if (match) {
+      const currentPlayers = parseInt(match[1], 10);
+      const maxPlayers = parseInt(match[2], 10);
+      return {
+        online: currentPlayers,
+        max: maxPlayers,
+      };
+    } else {
+      return undefined
+    }
   }
 }
 

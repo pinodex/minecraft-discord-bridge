@@ -160,7 +160,9 @@ const bridge = (config) => {
     ]);
 
     if (config.discord.category?.main) {
-      await serverStatusMonitor.checkAndUpdate();
+      const response = rcon.sendCommand('list');
+      const players = MinecraftStatusMonitor.parsePlayerListResponse(response)
+      await serverStatusMonitor.updateCategoryName({ online: true, players });
     }
   });
 
@@ -205,7 +207,9 @@ const bridge = (config) => {
     ]);
 
     if (config.discord.category?.main) {
-      await serverStatusMonitor.checkAndUpdate();
+      const response = rcon.sendCommand('list');
+      const players = MinecraftStatusMonitor.parsePlayerListResponse(response)
+      await serverStatusMonitor.updateCategoryName({ online: true, players });
     }
   });
 
