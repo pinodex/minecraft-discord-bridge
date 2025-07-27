@@ -114,21 +114,16 @@ class MinecraftStatusMonitor {
     let baseName = this.category.name.replace(/^([🟢🔴])\s*/, '').replace(/\s*\(\d+\/\d+\)/, '');
 
     const icon = online ? '🟢' : '🔴';
-    const onlinePlayers = players?.online ?? 0;
-    const maxPlayers = players?.max ?? 0;
+    // const onlinePlayers = players?.online ?? 0;
+    // const maxPlayers = players?.max ?? 0;
 
-    const playerCountLabel = onlinePlayers <= 0 && maxPlayers <= 0 ? '' : `(${onlinePlayers}/${maxPlayers})`
+    // const playerCountLabel = onlinePlayers <= 0 && maxPlayers <= 0 ? '' : `(${onlinePlayers}/${maxPlayers})`
 
-    const newName = `${icon.trim()} ${baseName.trim()} ${playerCountLabel.trim()}`.trim()
+    const newName = `${icon.trim()} ${baseName.trim()}`.trim()
 
-    // console.log("newName", newName, online, players.online)
-
-    if (this.category.name === newName) {
-      console.log("SAME NAME", this.category.name, " | ",newName)
+    if (this.category.name.includes(icon)) {
       return;
     }
-
-    console.log("NEW NAME", this.category.name, " | ",newName)
 
     await this.category.setName(newName);
     this.logger.info(`✅ Category renamed to: ${newName}`);

@@ -159,11 +159,11 @@ const bridge = (config) => {
       },
     ]);
 
-    if (config.discord.category?.main) {
-      const response = await rcon.sendCommand('list');
-      const players = MinecraftStatusMonitor.parsePlayerListResponse(response)
-      await serverStatusMonitor.updateCategoryName({ online: true, players });
-    }
+    // if (config.discord.category?.main) {
+    //   const response = await rcon.sendCommand('list');
+    //   const players = MinecraftStatusMonitor.parsePlayerListResponse(response)
+    //   await serverStatusMonitor.updateCategoryName({ online: true, players });
+    // }
   });
 
   minecraft.on(EVENTS.MC_PLAYER_ADVANCEMENT, async ({ username, advancement, type }) => {
@@ -205,12 +205,12 @@ const bridge = (config) => {
         },
       },
     ]);
-
-    if (config.discord.category?.main) {
-      const response = await rcon.sendCommand('list');
-      const players = MinecraftStatusMonitor.parsePlayerListResponse(response)
-      await serverStatusMonitor.updateCategoryName({ online: true, players });
-    }
+    //
+    // if (config.discord.category?.main) {
+    //   const response = await rcon.sendCommand('list');
+    //   const players = MinecraftStatusMonitor.parsePlayerListResponse(response)
+    //   await serverStatusMonitor.updateCategoryName({ online: true, players });
+    // }
   });
 
   discordChatReceiver.on(EVENTS.DISCORD_USER_CHAT, async ({ username, message }) => {
@@ -228,7 +228,6 @@ const bridge = (config) => {
   discordChatReceiver.login();
 
   if (config.discord.category?.main) {
-    console.log("START MONITOR")
     serverStatusMonitor.start();
   }
 };
