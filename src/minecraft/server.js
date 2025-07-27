@@ -40,9 +40,7 @@ class MinecraftStatusMonitor {
    */
   async start() {
     this.client.once('ready', async () => {
-      this.logger.info(`Starting Server Status Monitoring...`);
-
-      this.logger.info(`✅ Logged in as ${this.client.user.tag}`);
+      this.logger.debug(`Starting Server Status Monitoring...`);
 
       this.category = await this.fetchCategory();
 
