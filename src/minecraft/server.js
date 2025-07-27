@@ -1,5 +1,5 @@
 const { status } = require('minecraft-server-util');
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, Intents } = require('discord.js');
 const {getLoggerInstance} = require("../lib/logger");
 
 /**
@@ -26,7 +26,7 @@ class MinecraftStatusMonitor {
     this.port = port;
     this.intervalMs = intervalMs;
 
-    this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    this.client = new Client({ intents: [Intents.FLAGS.GUILDS] });
     this.channel = null;
   }
 
