@@ -71,8 +71,10 @@ class MinecraftStatusMonitor {
   async pingServer() {
     try {
       const res = await status(this.host, this.port, { timeout: 3000 });
+      this.logger.error("STATUS RESPONSE", res);
       return !!res;
     } catch (error) {
+      this.logger.error("STATUS ERROR",error);
       return false;
     }
   }
