@@ -121,7 +121,7 @@ class MinecraftStatusMonitor {
 
     const newName = `${icon} ${baseName} ${playerCountLabel}`.trim();
 
-    console.log("newName", newName, online, players.online)
+    console.log(this.category.name, "newName", newName, online, players.online)
 
     await this.category.setName(newName);
   }
