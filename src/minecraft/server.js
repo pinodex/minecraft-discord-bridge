@@ -2,6 +2,7 @@ const { status } = require('minecraft-server-util');
 const { Client, Intents } = require('discord.js');
 const {getLoggerInstance} = require("../lib/logger");
 const cron = require('node-cron');
+const mcs = require("node-mcstatus");
 
 /**
  * Minecraft server monitor that updates a Discord channel's name based on server status.
@@ -14,16 +15,14 @@ class MinecraftStatusMonitor {
    * @param {string} options.serverId  Minecraft Server ID
    * @param {string} options.token - Discord bot token.
    * @param {string} options.categoryId - ID of the Discord category to update.
-   * @param {string} options.host - Domain or IP of the Minecraft server.
-   * @param {number=} [options.port] - Port of the Minecraft server (optional if SRV is configured).
+   * @param {number} [options.port] - Port of the Minecraft server (optional if SRV is configured).
    * @param {string} [options.cronExpression='* * * * *'] - Interval to check server status (default 5 minutes).
    */
-  constructor({ serverId, token, categoryId, host, port, cronExpression = "* * * * *" }) {
+  constructor({ serverId, token, categoryId, port, cronExpression = "* * * * *" }) {
     this.logger = getLoggerInstance(serverId);
 
     this.discordToken = token;
     this.categoryId = categoryId;
-    this.host = host;
     this.port = port;
     this.cronExpression = cronExpression;
 
@@ -33,6 +32,7 @@ class MinecraftStatusMonitor {
       ]
     });
     this.category = null;
+    this.hosts = process.env.HOSTS;
   }
 
   /**
@@ -68,9 +68,9 @@ class MinecraftStatusMonitor {
    */
   async checkAndUpdate() {
     try {
-      const isOnline = await this.pingServer();
+      const result = await this.pingServer();
 
-      await this.updateCategoryName(isOnline);
+      await this.updateCategoryName(result);
     } catch (err) {
       this.logger.error('❌ Failed to check/update status:', err);
     }
@@ -78,27 +78,40 @@ class MinecraftStatusMonitor {
 
   /**
    * Pings the Minecraft server.
-   * @returns {Promise<boolean>}
+   * @returns {Promise<JavaStatusResponse | { online: false }>}
    */
   async pingServer() {
     try {
-      const res = await status(this.host, this.port, { timeout: 3000 });
-      return !!res;
+      if (!this.hosts || !this.port) throw new Error('Hosts and Port is required.');
+      const hosts = this.hosts.split(",");
+      const results = await Promise.all(hosts.map(async (host) => mcs.statusJava(host, this.port, { query: true })));
+
+      const onlineHost = results.find((result) => result.online);
+
+      if (!onlineHost) return results?.[0];
+
+      return onlineHost;
     } catch (error) {
-      return false;
+      return { online: false };
     }
   }
 
   /**
    * Updates the category name with the server's status.
-   * @param {boolean} isOnline
+   * @param {JavaStatusResponse | { online: false }} result
    */
-  async updateCategoryName(isOnline) {
-    const baseName = this.category.name.replace(/^([🟢🔴])\s*/, '');
-    const icon = isOnline ? '🟢' : '🔴';
-    const newName = `${icon} ${baseName}`;
+  async updateCategoryName({ online, players }) {
+    let baseName = this.category.name.replace(/^([🟢🔴])\s*/, '').replace(/\s*\(\d+\/\d+\)/, '');
 
-    if (this.category.name.includes(icon)) return;
+    const icon = online ? '🟢' : '🔴';
+    const onlinePlayers = players?.online ?? 0;
+    const maxPlayers = players?.max ?? 0;
+
+    const playerCountLabel = onlinePlayers <= 0 && maxPlayers <= 0 ? '' : `(${onlinePlayers}/${maxPlayers})`
+
+    const newName = `${icon} ${baseName} ${playerCountLabel}`.trim();
+
+    if (this.category.name === newName) return;
 
     await this.category.setName(newName);
     this.logger.info(`✅ Category renamed to: ${newName}`);
