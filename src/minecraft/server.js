@@ -123,7 +123,10 @@ class MinecraftStatusMonitor {
 
     // console.log("newName", newName, online, players.online)
 
-    if (this.category.name === newName) return;
+    if (this.category.name === newName) {
+      console.log("SAME NAME", this.category.name, " | ",newName)
+      return;
+    }
 
     await this.category.setName(newName);
     this.logger.info(`✅ Category renamed to: ${newName}`);
