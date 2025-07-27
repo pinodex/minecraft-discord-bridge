@@ -1,6 +1,7 @@
 const { status } = require('minecraft-server-util');
 const { Client, Intents } = require('discord.js');
 const {getLoggerInstance} = require("../lib/logger");
+const cron = require('node-cron');
 
 /**
  * Minecraft server monitor that updates a Discord channel's name based on server status.
@@ -15,16 +16,16 @@ class MinecraftStatusMonitor {
    * @param {string} options.categoryId - ID of the Discord category to update.
    * @param {string} options.host - Domain or IP of the Minecraft server.
    * @param {number=} [options.port] - Port of the Minecraft server (optional if SRV is configured).
-   * @param {number} [options.intervalMs=300000] - Interval to check server status (default 5 minutes).
+   * @param {string} [options.cronExpression='* * * * *'] - Interval to check server status (default 5 minutes).
    */
-  constructor({ serverId, token, categoryId, host, port, intervalMs = 60 * 1000 }) {
+  constructor({ serverId, token, categoryId, host, port, cronExpression = "* * * * *" }) {
     this.logger = getLoggerInstance(serverId);
 
     this.discordToken = token;
     this.categoryId = categoryId;
     this.host = host;
     this.port = port;
-    this.intervalMs = intervalMs;
+    this.cronExpression = cronExpression;
 
     this.client = new Client({
       intents: [
@@ -53,9 +54,10 @@ class MinecraftStatusMonitor {
 
       await this.checkAndUpdate();
 
-      setInterval(() => {
-        this.checkAndUpdate();
-      }, this.intervalMs);
+      // Schedule a job to run every minute
+      cron.schedule(this.cronExpression, async () => {
+        await this.checkAndUpdate();
+      });
     });
 
     this.client.login(this.discordToken);
