@@ -119,7 +119,7 @@ class MinecraftStatusMonitor {
 
       this.logger.info(`Fetched Discord Category Channel. Category ID: ${category.id}`);
 
-      return channel;
+      return category;
     } catch (e) {
       this.logger.error(`Cannot fetch Discord Category Channel: ${e}`);
     }
