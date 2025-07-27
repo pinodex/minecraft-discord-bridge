@@ -83,10 +83,8 @@ class MinecraftStatusMonitor {
   async pingServer() {
     try {
       const res = await status(this.host, this.port, { timeout: 3000 });
-      this.logger.info("Status Monitoring:", res);
       return !!res;
     } catch (error) {
-      this.logger.error("Status Monitoring:",error);
       return false;
     }
   }
@@ -96,8 +94,6 @@ class MinecraftStatusMonitor {
    * @param {boolean} isOnline
    */
   async updateCategoryName(isOnline) {
-    this.logger.debug("Updating category status:", isOnline);
-
     const baseName = this.category.name.replace(/^([🟢🔴])\s*/, '');
     const icon = isOnline ? '🟢' : '🔴';
     const newName = `${icon} ${baseName}`;
