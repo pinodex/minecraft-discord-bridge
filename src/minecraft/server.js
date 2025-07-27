@@ -61,8 +61,6 @@ class MinecraftStatusMonitor {
 
       this.logger.info(`Server Status Monitoring is now running`);
     });
-
-    this.client.login(this.discordToken);
   }
 
   /**
