@@ -102,10 +102,7 @@ class MinecraftStatusMonitor {
     const icon = isOnline ? '🟢' : '🔴';
     const newName = `${icon} ${baseName}`;
 
-    if (this.category.name === newName) {
-      this.logger.info('✅ Category name already correct.');
-      return;
-    }
+    if (this.category.name.includes(icon)) return;
 
     await this.category.setName(newName);
     this.logger.info(`✅ Category renamed to: ${newName}`);
