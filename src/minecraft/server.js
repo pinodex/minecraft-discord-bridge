@@ -33,6 +33,8 @@ class MinecraftStatusMonitor {
     });
     this.category = null;
     this.hosts = process.env.HOSTS;
+
+    this.logger.debug(`Active Hosts - ${this.hosts}`);
   }
 
   /**
@@ -84,6 +86,7 @@ class MinecraftStatusMonitor {
     try {
       if (!this.hosts || !this.port) throw new Error('Hosts and Port is required.');
       const hosts = this.hosts.split(",");
+
       const results = await Promise.all(hosts.map(async (host) => mcs.statusJava(host, this.port, { query: true })));
 
       const onlineHost = results.find((result) => result.online);
