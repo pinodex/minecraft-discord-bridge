@@ -46,6 +46,7 @@ const MinecraftStatusMonitor = require("./minecraft/server");
  * @property {string} name
  * @property {string} logFile
  * @property {string} host
+ * @property {string} port
  * @property {BridgeConfigRCON} rcon
  * @property {BridgeConfigDiscord} discord
  * @property {Rule[]} rules
@@ -211,7 +212,8 @@ const bridge = (config) => {
       categoryId: config.discord.category.main,
       token: config.discord.token,
       intervalMs: 60 * 1000,
-      serverId: config.id
+      serverId: config.id,
+      port: config.port
     })
 
     serverStatusMonitor.start();

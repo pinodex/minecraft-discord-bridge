@@ -85,6 +85,7 @@ class MinecraftStatusMonitor {
   async pingServer() {
     try {
       if (!this.hosts || !this.port) throw new Error('Hosts and Port is required.');
+
       const hosts = this.hosts.split(",");
 
       const results = await Promise.all(hosts.map(async (host) => mcs.statusJava(host, this.port, { query: true })));

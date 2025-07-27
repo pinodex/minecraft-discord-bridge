@@ -46,6 +46,7 @@ if (discordHousekeeping) {
       id,
       name: process.env[`SERVER_${id}_MINECRAFT_NAME`] || id,
       host: process.env[`SERVER_${id}_MINECRAFT_HOST`],
+      port: process.env[`SERVER_${id}_MINECRAFT_PORT`],
       logFile: process.env[`SERVER_${id}_MINECRAFT_LOG_FILE`],
       rcon: {
         host: process.env[`SERVER_${id}_MINECRAFT_RCON_HOST`],
