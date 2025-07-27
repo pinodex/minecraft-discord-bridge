@@ -95,7 +95,7 @@ class MinecraftStatusMonitor {
 
     const baseName = this.channel.name.replace(/^([🟢🔴])\s*/, ''); // remove old icon if exists
     const icon = isOnline ? '🟢' : '🔴';
-    const newName = `${baseName}-${icon}`;
+    const newName = `${baseName}${icon}`;
 
     if (this.channel.name !== newName) {
       await this.channel.setName(newName);
