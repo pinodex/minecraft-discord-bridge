@@ -111,9 +111,7 @@ class MinecraftStatusMonitor {
    * @param {{ online: boolean, players: { max: number, online: number }}} result
    */
   async updateCategoryName({ online, players }) {
-    const category = await this.fetchCategory();
-
-    let baseName = category.name.replace(/^([🟢🔴])\s*/, '').replace(/\s*\(\d+\/\d+\)/, '');
+    let baseName = this.category.name.replace(/^([🟢🔴])\s*/, '').replace(/\s*\(\d+\/\d+\)/, '');
 
     const icon = online ? '🟢' : '🔴';
     const onlinePlayers = players?.online ?? 0;
@@ -123,9 +121,10 @@ class MinecraftStatusMonitor {
 
     const newName = `${icon} ${baseName} ${playerCountLabel}`.trim();
 
-    console.log(this.category.name, "newName", newName, online, players.online)
+    console.log("newName", newName, online, players.online)
 
-    await category.setName(`${online} - ${players.online}`);
+    await this.category.setName(newName);
+    this.logger.info(`✅ Category renamed to: ${newName}`);
   }
 
   /**
@@ -137,7 +136,7 @@ class MinecraftStatusMonitor {
     this.logger.debug(`Fetching Discord Category Channel ID ${this.categoryId}`);
 
     try {
-      const category = await this.client.channels.fetch(this.categoryId);
+      const category = await this.client.channels.fetch(this.categoryId, { force: true });
 
       this.logger.info(`Fetched Discord Category Channel. Category ID: ${category.id}`);
 
