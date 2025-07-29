@@ -68,7 +68,6 @@ const bridge = (config) => {
   const serverStatusMonitor = new MinecraftStatusMonitor({
     categoryId: config.discord.category.main,
     token: config.discord.token,
-    intervalMs: 60 * 1000,
     serverId: config.id,
     port: config.port
   })

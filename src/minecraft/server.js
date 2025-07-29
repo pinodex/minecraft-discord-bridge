@@ -16,9 +16,9 @@ class MinecraftStatusMonitor {
    * @param {string} options.token - Discord bot token.
    * @param {string} options.categoryId - ID of the Discord category to update.
    * @param {number} [options.port] - Port of the Minecraft server (optional if SRV is configured).
-   * @param {string} [options.cronExpression='* * * * *'] - Interval to check server status (default 5 minutes).
+   * @param {string} [options.cronExpression=] - Interval to check server status (default 5 minutes).
    */
-  constructor({ serverId, token, categoryId, port, cronExpression = "* * * * *" }) {
+  constructor({ serverId, token, categoryId, port, cronExpression = "*/5 * * * *" }) {
     this.logger = getLoggerInstance(serverId);
 
     this.discordToken = token;
